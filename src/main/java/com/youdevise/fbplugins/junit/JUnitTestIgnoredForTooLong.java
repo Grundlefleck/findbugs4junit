@@ -23,38 +23,50 @@
 
 package com.youdevise.fbplugins.junit;
 
-import org.apache.bcel.classfile.JavaClass;
+import java.io.IOException;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.asm.FBClassReader;
-import edu.umd.cs.findbugs.ba.AnalysisContext;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
-import edu.umd.cs.findbugs.classfile.ClassDescriptor;
-import edu.umd.cs.findbugs.classfile.Global;
 import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 
 public class JUnitTestIgnoredForTooLong implements Detector {
 
 	private static final int PRIORITY_TO_REPORT = Priorities.NORMAL_PRIORITY;
 	
-    static {
-//    	DAVRepositoryFactory.setup();
-        System.out.printf("Registered plugin detector [%s]%n", JUnitTestIgnoredForTooLong.class.getSimpleName());
-    }
-
-	
 	private final BugReporter bugReporter;
+	private final AgeOfIgnoreFinder ageOfIgnoreFinder;
+	private final FullSourcePathFinder sourcePathFinder;
+	private final UnitTestVisitor unitTestVisitor;
 
-	public JUnitTestIgnoredForTooLong(BugReporter bugReporter) {
+	public JUnitTestIgnoredForTooLong(BugReporter bugReporter, AgeOfIgnoreFinder ageOfIgnoreFinder, FullSourcePathFinder sourcePathFinder, UnitTestVisitor visitor) {
 		this.bugReporter = bugReporter;
+		this.ageOfIgnoreFinder = ageOfIgnoreFinder;
+		this.sourcePathFinder = sourcePathFinder;
+		this.unitTestVisitor = visitor;
 	}
 
-	@Override public void report() { }
-
+	public void visitClassContext(ClassContext classContext) {
+		
+		if(!unitTestVisitor.classContainsIgnoredTests()) { return; }
+		
+		try {
+			String fullSourcePath = sourcePathFinder.fullSourcePath(classContext);
+			
+			for(IgnoredTestDetails ignoredTest: unitTestVisitor.detailsOfIgnoredTests()) {
+				if (ageOfIgnoreFinder.ignoredForTooLong(fullSourcePath, ignoredTest)) {
+					doReportBug(classContext, ignoredTest.methodName);
+				}
+			}
+		} catch (IOException e) {
+			logError("Could not find source file location for " + classContext.getJavaClass().getFileName(), e);
+			return;
+		
+		}
+	}
+	
     private void doReportBug(ClassContext classContext, String testCaseMethodName) {
         String slashedClassName = classContext.getClassDescriptor().getClassName();
 		MethodDescriptor methodDescriptor = new MethodDescriptor(slashedClassName, testCaseMethodName, "()V", false);
@@ -62,110 +74,12 @@ public class JUnitTestIgnoredForTooLong implements Detector {
         bugReporter.reportBug(bug);
 	}
 	
-	@Override public void visitClassContext(ClassContext classContext) {
-		JUnitTestVisitor visitor = analyseClassToDiscoverIgnoredTestCases(classContext);
-		JavaClass javaClass = classContext.getJavaClass();
-        String sourceFile = javaClass.getSourceFileName();
-        String packageName = javaClass.getPackageName();
-        
-        
-        for(IgnoredTestDetails ignoredTest: visitor.detailsOfIgnoredTests()) {
-        	doReportBug(classContext, ignoredTest.methodName);
-        }
-        
-        
-//        List<Method> methods = classContext.getMethodsInCallOrder();
-//        for (Method method : methods) {
-//            if (testMethodFinder.isJUnitTestMethod(method)) {
-//                try {
-//                    analyzeMethod(classContext, method);
-//                } catch (ClassNotFoundException e) {
-//                    logError(classContext.getClassDescriptor(), e);
-//                } catch (CheckedAnalysisException e) {
-//                    logError(classContext.getClassDescriptor(), e);
-//                }
-//            }
-//		}
-	}
-	
-    private void logError(ClassDescriptor classDescriptor, Exception e) {
-        System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s", classDescriptor.getDottedClassName(), e.getMessage());
+    private void logError(String message, Exception e) {
+        System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s", message, e);
     }
-    
-    private void logError(String message) {
-        System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s", message);
-    }
-        
+
+	@Override public void report() { }
 
     
-	private JUnitTestVisitor analyseClassToDiscoverIgnoredTestCases(ClassContext classContext) {
-        ClassDescriptor classDescriptor = classContext.getClassDescriptor();
-        
-        FBClassReader reader;
-        JUnitTestVisitor ignoredTestCasesFinder = new JUnitTestVisitor();
-        try {
-            reader = Global.getAnalysisCache().getClassAnalysis(FBClassReader.class, classDescriptor);
-        } catch (CheckedAnalysisException e) {
-            AnalysisContext.logError("Error finding old @Ignore'd tests." + classDescriptor, e);
-            return ignoredTestCasesFinder;
-        }
-        reader.accept(ignoredTestCasesFinder, 0);
-        return ignoredTestCasesFinder;
-    }
-    
-
-//        try {
-//            SourceFile findSourceFile = classContext.getAnalysisContext().getSourceFinder().findSourceFile(packageName, sourceFile);
-//            String fullFileName = findSourceFile.getFullFileName();
-//            fullFileName = "https://mutability-detector.googlecode.com/svn/trunk/MutabilityDetector/trunk/MutabilityDetector/src/test/java/org/mutabilitydetector/benchmarks/settermethod/SetterMethodCheckerTest.java";
-//            logHistoryOfFile(fullFileName);
-//            
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-			
-//    private void logHistoryOfFile(String fullFileName) {
-//    	try {
-//    		 SVNURL fileURL = SVNURL.parseURIEncoded(fullFileName);
-// 
-//			 //SVNLogClient is the class with which you can perform annotations 
-//			 SVNLogClient logClient = SVNClientManager.newInstance().getLogClient();
-//			 boolean ignoreMimeType = false;
-//			 boolean includeMergedRevisions = false;
-// 
-//			 logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, 
-//					 ignoreMimeType, includeMergedRevisions, 
-//					 new AnnotationHandler(includeMergedRevisions, false, logClient.getOptions()), 
-//					 null);
-//		 } catch (SVNException svne) {
-// 		     System.out.println(svne.getMessage());
-//		 }
-//
-//	}
-
-	
-//    private static class AnnotationHandler implements ISVNAnnotateHandler {
-//
-//		public AnnotationHandler(boolean includeMergedRevisions, boolean b, ISVNOptions options) {
-//		}
-//
-//		@Override public void handleEOF() {
-//		}
-//
-//		@Override public void handleLine(Date date, long revision, String author, String line) throws SVNException {
-//			
-//			
-//		}
-//
-//		@Override public void handleLine(Date date, long revision, String author, String line, Date mergedDate,
-//				long mergedRevision, String mergedAuthor, String mergedPath, int lineNumber) throws SVNException {
-//
-//		}
-//
-//		@Override public boolean handleRevision(Date date, long revision, String author, File contents) throws SVNException {
-//			return false;
-//		}
-//    	
-//    }
 	
 }

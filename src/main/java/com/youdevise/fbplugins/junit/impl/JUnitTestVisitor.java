@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
 */
-package com.youdevise.fbplugins.junit;
+package com.youdevise.fbplugins.junit.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,10 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
 
-public class JUnitTestVisitor extends EmptyVisitor {
+import com.youdevise.fbplugins.junit.IgnoredTestDetails;
+import com.youdevise.fbplugins.junit.UnitTestVisitor;
+
+public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	
 	private boolean classContainsIgnore = false;
 	private String sourceFileName;

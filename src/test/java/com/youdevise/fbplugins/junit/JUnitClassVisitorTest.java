@@ -35,25 +35,25 @@ import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 
 import com.youdevise.fbplugins.junit.IgnoredTestDetails;
-import com.youdevise.fbplugins.junit.JUnitTestVisitor;
 import com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.OneCommentedOutIgnoreTestCase;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase;
+import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 
 public class JUnitClassVisitorTest {
 
 	
 	@Test public void
 	hasFoundIgnore() throws Exception {
-		JUnitTestVisitor visitor = runDetector(OneIgnoredTestCase.class);
+		UnitTestVisitor visitor = runDetector(OneIgnoredTestCase.class);
 		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
 	}
 	
 	
 	@Test public void
 	reportsDetailsOfIgnoredTests() throws Exception {
-		JUnitTestVisitor visitor = runDetector(OneIgnoredOneActive.class);
+		UnitTestVisitor visitor = runDetector(OneIgnoredOneActive.class);
 
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		assertThat(detailsOfIgnoredTests.size(), is(1));
@@ -63,7 +63,7 @@ public class JUnitClassVisitorTest {
 	
 	@Test public void
 	reportsOnManyIgnoredTests() throws Exception {
-		JUnitTestVisitor visitor = runDetector(ManyIgnoredOneActive.class);
+		UnitTestVisitor visitor = runDetector(ManyIgnoredOneActive.class);
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		
 		assertThat(detailsOfIgnoredTests.size(), is(2));
@@ -73,7 +73,7 @@ public class JUnitClassVisitorTest {
 	
 	@Test public void
 	doesNotReportIgnoredTestWhenTheIgnoreAnnotationIsCommentedOut() {
-		JUnitTestVisitor visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
+		UnitTestVisitor visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		
 		assertThat(detailsOfIgnoredTests.size(), is(0));
@@ -81,7 +81,7 @@ public class JUnitClassVisitorTest {
 
 	
 	
-	private JUnitTestVisitor runDetector(Class<?> toVisit) {
+	private UnitTestVisitor runDetector(Class<?> toVisit) {
 		JUnitTestVisitor visitor = new JUnitTestVisitor();
 		ClassReader cr;
 		try {

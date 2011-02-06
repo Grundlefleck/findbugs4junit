@@ -2,7 +2,7 @@
 
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultenabled="true" >
 
-  <Detector class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" speed="fast" />
+  <Detector class="com.youdevise.fbplugins.junit.ThisPluginDetector" speed="fast" />
   <BugPattern type="JUNIT_IGNORED_TOO_LONG" abbrev="JUNIT" category="CORRECTNESS" />
 
 </FindbugsPlugin>

@@ -10,7 +10,7 @@
         </Details>
     </Plugin>
 
-  <Detector class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" >
+  <Detector class="com.youdevise.fbplugins.junit.ThisPluginDetector" >
     <Details>
       <![CDATA[<p> This detector looks for JUnit test cases which have been @Ignored for too long.
         </p>]]>
