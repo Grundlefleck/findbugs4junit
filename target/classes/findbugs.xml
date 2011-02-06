@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultenabled="true" >
-
-  <Detector class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" speed="fast" />
-  <BugPattern type="JUNIT_IGNORED_TOO_LONG" abbrev="JUNIT" category="CORRECTNESS" />
-
-</FindbugsPlugin>
-
