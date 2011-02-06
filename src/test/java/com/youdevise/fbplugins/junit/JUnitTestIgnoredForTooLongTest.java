@@ -68,8 +68,6 @@ public class JUnitTestIgnoredForTooLongTest {
         unitTestVisitor = mock(UnitTestVisitor.class);
         ProjectStats projectStats = mock(ProjectStats.class);
         when(bugReporter.getProjectStats()).thenReturn(projectStats);
-
-        constructDetector();
     }
 
 	private void constructDetector() {
@@ -79,6 +77,7 @@ public class JUnitTestIgnoredForTooLongTest {
 	@Test public void
 	doesNotReportBugWhenClassHasNoIgnoredTestCases() throws Exception {
 		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(false);
+		constructDetector();
 		assertNoBugsReportedForClass(NoIgnoredTests.class); 
 	}
 	
