@@ -1,0 +1,1 @@
+0 BugPattern JUNIT_IGNORED_TOO_LONG

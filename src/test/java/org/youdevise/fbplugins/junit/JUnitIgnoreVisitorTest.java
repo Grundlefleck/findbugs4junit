@@ -21,12 +21,11 @@
  * THE SOFTWARE.
 */
 
-package org.youdevise.fbplugins.findbugsjunit;
+package org.youdevise.fbplugins.junit;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -34,24 +33,26 @@ import java.util.List;
 
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
-import org.youdevise.fbplugins.findbugs4junit.benchmarks.ManyIgnoredOneActive;
-import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneCommentedOutIgnoreTestCase;
-import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredOneActive;
-import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredTestCase;
+import org.youdevise.fbplugins.junit.IgnoredTestDetails;
+import org.youdevise.fbplugins.junit.JUnitIgnoredTestCaseDetector;
+import org.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive;
+import org.youdevise.fbplugins.junit.benchmarks.OneCommentedOutIgnoreTestCase;
+import org.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive;
+import org.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase;
 
 public class JUnitIgnoreVisitorTest {
 
 	
 	@Test public void
 	hasFoundIgnore() throws Exception {
-		JUnitIgnoreDetector visitor = runDetector(OneIgnoredTestCase.class);
+		JUnitIgnoredTestCaseDetector visitor = runDetector(OneIgnoredTestCase.class);
 		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
 	}
 	
 	
 	@Test public void
 	reportsDetailsOfIgnoredTests() throws Exception {
-		JUnitIgnoreDetector visitor = runDetector(OneIgnoredOneActive.class);
+		JUnitIgnoredTestCaseDetector visitor = runDetector(OneIgnoredOneActive.class);
 
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		assertThat(detailsOfIgnoredTests.size(), is(1));
@@ -61,7 +62,7 @@ public class JUnitIgnoreVisitorTest {
 	
 	@Test public void
 	reportsOnManyIgnoredTests() throws Exception {
-		JUnitIgnoreDetector visitor = runDetector(ManyIgnoredOneActive.class);
+		JUnitIgnoredTestCaseDetector visitor = runDetector(ManyIgnoredOneActive.class);
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		
 		assertThat(detailsOfIgnoredTests.size(), is(2));
@@ -71,14 +72,16 @@ public class JUnitIgnoreVisitorTest {
 	
 	@Test public void
 	doesNotReportIgnoredTestWhenTheIgnoreAnnotationIsCommentedOut() {
-		JUnitIgnoreDetector visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
+		JUnitIgnoredTestCaseDetector visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
 		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		
 		assertThat(detailsOfIgnoredTests.size(), is(0));
 	}
 
-	private JUnitIgnoreDetector runDetector(Class<?> toVisit) {
-		JUnitIgnoreDetector visitor = new JUnitIgnoreDetector();
+	
+	
+	private JUnitIgnoredTestCaseDetector runDetector(Class<?> toVisit) {
+		JUnitIgnoredTestCaseDetector visitor = new JUnitIgnoredTestCaseDetector();
 		ClassReader cr;
 		try {
 			cr = new ClassReader(toVisit.getName());

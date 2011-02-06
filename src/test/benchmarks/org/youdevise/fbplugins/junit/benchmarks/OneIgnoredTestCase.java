@@ -21,7 +21,7 @@
  * THE SOFTWARE.
 */
 
-package org.youdevise.fbplugins.findbugs4junit.benchmarks;
+package org.youdevise.fbplugins.junit.benchmarks;
 
 import static junit.framework.Assert.assertTrue;
 

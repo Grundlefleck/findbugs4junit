@@ -21,23 +21,19 @@
  * THE SOFTWARE.
 */
 
-package org.youdevise.fbplugins.findbugs4junit.benchmarks;
+package org.youdevise.fbplugins.junit;
 
-import static junit.framework.Assert.assertTrue;
+import edu.umd.cs.findbugs.Detector;
+import edu.umd.cs.findbugs.ba.ClassContext;
 
-import org.junit.Ignore;
-import org.junit.Test;
+public class JUnitTestIgnoredForTooLong implements Detector {
 
-public class OneIgnoredOneActive {
-
-	@Ignore
-	@Test public void myIgnoredTest() throws Exception {
-		assertTrue(false);
+	@Override public void report() {
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
-	
-	@Test public void
-	myActiveTest() throws Exception {
-		
+
+	@Override public void visitClassContext(ClassContext arg0) {
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
-	
+
 }

@@ -21,20 +21,23 @@
  * THE SOFTWARE.
 */
 
-package org.youdevise.fbplugins.findbugs4junit.benchmarks;
+package org.youdevise.fbplugins.junit.benchmarks;
 
 import static junit.framework.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class OneCommentedOutIgnoreTestCase {
+public class OneIgnoredOneActive {
 
-	//@Ignore
-	/**
-	 * This is a 'dead' @Ignore, which should not appear in the bytecode.
-	 */
+	@Ignore
 	@Test public void myIgnoredTest() throws Exception {
 		assertTrue(false);
+	}
+	
+	@Test public void
+	myActiveTest() throws Exception {
+		
 	}
 	
 }

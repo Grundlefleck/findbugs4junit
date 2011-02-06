@@ -8,7 +8,7 @@
  * 		license/LICENSE.txt
  */
 
-package org.youdevise.fbplugins.findbugsjunit;
+package org.youdevise.fbplugins.junit;
 
 public class IgnoredTestDetails {
 

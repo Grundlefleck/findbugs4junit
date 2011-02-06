@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
 */
-package org.youdevise.fbplugins.findbugsjunit;
+package org.youdevise.fbplugins.junit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.EmptyVisitor;
 
-public class JUnitIgnoreDetector extends EmptyVisitor {
+public class JUnitIgnoredTestCaseDetector extends EmptyVisitor {
 	
 	private boolean classContainsIgnore = false;
 	private String sourceFileName;
