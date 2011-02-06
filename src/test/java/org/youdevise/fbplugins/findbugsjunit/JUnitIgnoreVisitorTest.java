@@ -1,29 +1,61 @@
 /*
- * Mutability Detector
+ * FindBugs4JUnit. Copyright (c) 2010 youDevise, Ltd.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *
- * Further licensing information for this project can be found in 
- * 		license/LICENSE.txt
- */
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+*/
 
 package org.youdevise.fbplugins.findbugsjunit;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
-import org.youdevise.fbplugins.findbugs4junit.benchmarks.WithIgnoredTestCases;
+import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredOneActive;
+import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredTestCase;
 
 public class JUnitIgnoreVisitorTest {
 
 	
 	@Test public void
 	hasFoundIgnore() throws Exception {
-		Class<?> toVisit = WithIgnoredTestCases.class;
+		JUnitIgnoreDetector visitor = runDetector(OneIgnoredTestCase.class);
+		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
+	}
+	
+	
+	@Test public void
+	reportsDetailsOfIgnoredTests() throws Exception {
+		JUnitIgnoreDetector visitor = runDetector(OneIgnoredOneActive.class);
+
+		IgnoredTestDetails detailsOfIgnoredTest = visitor.detailsOfIgnoredTest();
+		assertThat(detailsOfIgnoredTest.lineNumber, is(35));
+		assertThat(detailsOfIgnoredTest.methodName, is("myIgnoredTest"));
+		assertThat(detailsOfIgnoredTest.fileName, is("OneIgnoredOneActive.java"));
+	}
+	
+
+	private JUnitIgnoreDetector runDetector(Class<?> toVisit) {
 		JUnitIgnoreDetector visitor = new JUnitIgnoreDetector();
 		ClassReader cr;
 		try {
@@ -32,10 +64,7 @@ public class JUnitIgnoreVisitorTest {
 			throw new RuntimeException(e);
 		}
 		cr.accept(visitor, 0);
-		
-		
-		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
-		
+		return visitor;
 	}
 	
 }
