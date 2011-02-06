@@ -23,15 +23,19 @@
 
 package org.youdevise.fbplugins.findbugsjunit;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
+import org.youdevise.fbplugins.findbugs4junit.benchmarks.ManyIgnoredOneActive;
+import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneCommentedOutIgnoreTestCase;
 import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredOneActive;
 import org.youdevise.fbplugins.findbugs4junit.benchmarks.OneIgnoredTestCase;
 
@@ -49,17 +53,29 @@ public class JUnitIgnoreVisitorTest {
 	reportsDetailsOfIgnoredTests() throws Exception {
 		JUnitIgnoreDetector visitor = runDetector(OneIgnoredOneActive.class);
 
-		IgnoredTestDetails detailsOfIgnoredTest = visitor.detailsOfIgnoredTest();
-		assertThat(detailsOfIgnoredTest.lineNumber, is(35));
-		assertThat(detailsOfIgnoredTest.methodName, is("myIgnoredTest"));
-		assertThat(detailsOfIgnoredTest.fileName, is("OneIgnoredOneActive.java"));
+		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+		assertThat(detailsOfIgnoredTests.size(), is(1));
+		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(35, "myIgnoredTest", "OneIgnoredOneActive.java")));
+
 	}
 	
 	@Test public void
 	reportsOnManyIgnoredTests() throws Exception {
+		JUnitIgnoreDetector visitor = runDetector(ManyIgnoredOneActive.class);
+		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 		
+		assertThat(detailsOfIgnoredTests.size(), is(2));
+		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(36, "myIgnoredTest", "ManyIgnoredOneActive.java")));
+		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(42, "mySecondIgnoredTest", "ManyIgnoredOneActive.java")));
 	}
 	
+	@Test public void
+	doesNotReportIgnoredTestWhenTheIgnoreAnnotationIsCommentedOut() {
+		JUnitIgnoreDetector visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
+		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+		
+		assertThat(detailsOfIgnoredTests.size(), is(0));
+	}
 
 	private JUnitIgnoreDetector runDetector(Class<?> toVisit) {
 		JUnitIgnoreDetector visitor = new JUnitIgnoreDetector();

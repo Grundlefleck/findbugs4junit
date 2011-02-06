@@ -22,6 +22,9 @@
 */
 package org.youdevise.fbplugins.findbugsjunit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.Label;
@@ -32,7 +35,7 @@ public class JUnitIgnoreDetector extends EmptyVisitor {
 	
 	private boolean classContainsIgnore = false;
 	private String sourceFileName;
-	private IgnoredTestDetails ignoredTestDetails;
+	private ArrayList<IgnoredTestDetails> ignoredTests = new ArrayList<IgnoredTestDetails>();
 
 	public boolean classContainsIgnoredTests() {
 		return classContainsIgnore;
@@ -81,14 +84,13 @@ public class JUnitIgnoreDetector extends EmptyVisitor {
 			this.currentLineNumber = lineNumber;
 			if(methodAnnotatedWithIgnore) {
 				methodAnnotatedWithIgnore = false;
-				ignoredTestDetails = new IgnoredTestDetails(currentLineNumber, methodName, sourceFileName); 
+				ignoredTests.add(new IgnoredTestDetails(currentLineNumber, methodName, sourceFileName)); 
 			}
 		}
 		
 	}
 
-
-	public IgnoredTestDetails detailsOfIgnoredTest() {
-		return ignoredTestDetails;
+	public List<IgnoredTestDetails> detailsOfIgnoredTests() {
+		return ignoredTests;
 	}
 }
