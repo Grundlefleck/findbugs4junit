@@ -25,6 +25,7 @@ package org.youdevise.fbplugins.findbugsjunit;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -52,6 +53,11 @@ public class JUnitIgnoreVisitorTest {
 		assertThat(detailsOfIgnoredTest.lineNumber, is(35));
 		assertThat(detailsOfIgnoredTest.methodName, is("myIgnoredTest"));
 		assertThat(detailsOfIgnoredTest.fileName, is("OneIgnoredOneActive.java"));
+	}
+	
+	@Test public void
+	reportsOnManyIgnoredTests() throws Exception {
+		
 	}
 	
 
