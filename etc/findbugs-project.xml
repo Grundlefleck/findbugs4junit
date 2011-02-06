@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="2.0.0-dev-20110206" sequence="0" timestamp="1297013717000" analysisTimestamp="1297013859678" release="">
+  <Project projectName="findbugs4junit">
+    <Jar>/home/graham/dev/workspaces/projects/findbugs4junit/target/classes</Jar>
+    <Jar>/home/graham/dev/workspaces/projects/findbugs4junit/target/test-classes</Jar>
+    <AuxClasspathEntry>/home/graham/dev/workspaces/projects/findbugs4junit/target/findbugs4junit-0.0.1-SNAPSHOT.jar</AuxClasspathEntry>
+    <SrcDir>/home/graham/dev/workspaces/projects/findbugs4junit/target/findbugs4junit-0.0.1-SNAPSHOT.jar</SrcDir>
+    <SrcDir>/home/graham/dev/workspaces/projects/findbugs4junit/src/test/benchmarks</SrcDir>
+    <SrcDir>/home/graham/dev/workspaces/projects/findbugs4junit/src/test/java</SrcDir>
+    <SrcDir>/home/graham/dev/workspaces/projects/findbugs4junit/src/main/java</SrcDir>
+    <WrkDir>/home/graham/dev/workspaces/projects/findbugs4junit/etc</WrkDir>
+    <SuppressionFilter>
+      <LastVersion value="-1" relOp="NEQ"/>
+    </SuppressionFilter>
+  </Project>
+  <CloudDetails online="false"/>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" name="visitClassContext" signature="(Ledu/umd/cs/findbugs/ba/ClassContext;)V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="66" end="89" startBytecode="0" endBytecode="30" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Method>
+    <LocalVariable name="packageName" register="5" pc="23" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="69" end="69" startBytecode="21" endBytecode="21" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.BASE_VALUE" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="packageName"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.METHOD_RESULT" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" name="visitClassContext" signature="(Ledu/umd/cs/findbugs/ba/ClassContext;)V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="66" end="89" startBytecode="0" endBytecode="30" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Method>
+    <LocalVariable name="sourceFile" register="4" pc="17" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="68" end="68" startBytecode="15" endBytecode="15" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.BASE_VALUE" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="sourceFile"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.METHOD_RESULT" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+  </BugInstance>
+  <BugInstance type="VA_FORMAT_STRING_MISSING_ARGUMENT" priority="1" abbrev="FS" category="CORRECTNESS" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" name="logError" signature="(Ljava/lang/String;)V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="96" end="97" startBytecode="0" endBytecode="73" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+    </Method>
+    <Method classname="java.io.PrintStream" name="printf" signature="(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.PrintStream" start="821" end="821" startBytecode="0" endBytecode="30" sourcefile="PrintStream.java" sourcepath="java/io/PrintStream.java"/>
+    </Method>
+    <String value="%s" role="STRING_FORMAT_SPECIFIER"/>
+    <String value="[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s" role="STRING_FORMAT_STRING"/>
+    <Int value="2" role="INT_EXPECTED_ARGUMENTS"/>
+    <Int value="1" role="INT_ACTUAL_ARGUMENTS"/>
+    <SourceLine classname="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" start="96" end="96" startBytecode="13" endBytecode="13" sourcefile="JUnitTestIgnoredForTooLong.java" sourcepath="com/youdevise/fbplugins/junit/JUnitTestIgnoredForTooLong.java"/>
+  </BugInstance>
+  <BugInstance type="JUNIT_IGNORED_TOO_LONG" priority="2" abbrev="JUNIT" category="CORRECTNESS" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" sourcefile="ManyIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/ManyIgnoredOneActive.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" name="myIgnoredTest" signature="()V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" start="36" end="37" startBytecode="0" endBytecode="50" sourcefile="ManyIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/ManyIgnoredOneActive.java"/>
+    </Method>
+  </BugInstance>
+  <BugInstance type="JUNIT_IGNORED_TOO_LONG" priority="2" abbrev="JUNIT" category="CORRECTNESS" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" sourcefile="ManyIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/ManyIgnoredOneActive.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" name="mySecondIgnoredTest" signature="()V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" start="42" end="43" startBytecode="0" endBytecode="50" sourcefile="ManyIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/ManyIgnoredOneActive.java"/>
+    </Method>
+  </BugInstance>
+  <BugInstance type="JUNIT_IGNORED_TOO_LONG" priority="2" abbrev="JUNIT" category="CORRECTNESS" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive" sourcefile="OneIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/OneIgnoredOneActive.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive" name="myIgnoredTest" signature="()V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive" start="35" end="36" startBytecode="0" endBytecode="50" sourcefile="OneIgnoredOneActive.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/OneIgnoredOneActive.java"/>
+    </Method>
+  </BugInstance>
+  <BugInstance type="JUNIT_IGNORED_TOO_LONG" priority="2" abbrev="JUNIT" category="CORRECTNESS" firstSeen="2/6/11 5:35 PM">
+    <Class classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase" sourcefile="OneIgnoredTestCase.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/OneIgnoredTestCase.java"/>
+    </Class>
+    <Method classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase" name="myIgnoredTest" signature="()V" isStatic="false">
+      <SourceLine classname="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase" start="38" end="39" startBytecode="0" endBytecode="50" sourcefile="OneIgnoredTestCase.java" sourcepath="com/youdevise/fbplugins/junit/benchmarks/OneIgnoredTestCase.java"/>
+    </Method>
+  </BugInstance>
+  <Errors errors="0" missingClasses="50">
+    <MissingClass>edu.umd.cs.findbugs.BugInstance</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.BugReporter</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.Detector</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.DetectorToDetector2Adapter</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.NoOpFindBugsProgress</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.ProjectStats</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.asm.FBClassReader</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.ba.AnalysisCacheToAnalysisContextAdapter</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.ba.AnalysisContext</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.ba.ClassContext</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.ba.FieldSummary</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.CheckedAnalysisException</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.ClassDescriptor</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.DescriptorFactory</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.Global</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IAnalysisCache</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IClassFactory</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IClassPath</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IClassPathBuilder</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IClassPathBuilderProgress</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.ICodeBase</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.ICodeBaseLocator</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.IErrorLogger</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.MethodDescriptor</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.engine.EngineRegistrar</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.engine.asm.EngineRegistrar</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.engine.bcel.ClassContextClassAnalysisEngine</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.engine.bcel.EngineRegistrar</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.impl.ClassFactory</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.impl.ClassPathImpl</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.impl.DirectoryCodeBase</MissingClass>
+    <MissingClass>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator</MissingClass>
+    <MissingClass>junit.framework.Assert</MissingClass>
+    <MissingClass>org.apache.bcel.classfile.JavaClass</MissingClass>
+    <MissingClass>org.hamcrest.BaseMatcher</MissingClass>
+    <MissingClass>org.hamcrest.CoreMatchers</MissingClass>
+    <MissingClass>org.hamcrest.Description</MissingClass>
+    <MissingClass>org.hamcrest.Matcher</MissingClass>
+    <MissingClass>org.hamcrest.MatcherAssert</MissingClass>
+    <MissingClass>org.junit.Assert</MissingClass>
+    <MissingClass>org.junit.Before</MissingClass>
+    <MissingClass>org.junit.Ignore</MissingClass>
+    <MissingClass>org.junit.Test</MissingClass>
+    <MissingClass>org.mockito.Matchers</MissingClass>
+    <MissingClass>org.mockito.Mockito</MissingClass>
+    <MissingClass>org.mockito.stubbing.OngoingStubbing</MissingClass>
+    <MissingClass>org.mockito.verification.VerificationMode</MissingClass>
+    <MissingClass>org.objectweb.asm.ClassReader</MissingClass>
+    <MissingClass>org.objectweb.asm.ClassVisitor</MissingClass>
+    <MissingClass>org.objectweb.asm.commons.EmptyVisitor</MissingClass>
+  </Errors>
+  <FindBugsSummary timestamp="Sun, 6 Feb 2011 17:35:17 +0000" total_classes="13" referenced_classes="31" total_bugs="7" total_size="274" num_packages="3" vm_version="11.2-b01" cpu_seconds="28.37" clock_seconds="120.20" peak_mbytes="100.95" alloc_mbytes="479.56" gc_seconds="0.55" priority_2="6" priority_1="1">
+    <PackageStats package="com.youdevise.fbplugins" total_bugs="0" total_types="3" total_size="56">
+      <ClassStats class="com.youdevise.fbplugins.BugInstanceMatchers" sourceFile="BugInstanceMatchers.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.BugInstanceMatchers$BugInstanceTypeMatcher" sourceFile="BugInstanceMatchers.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.DetectorRunner" sourceFile="DetectorRunner.java" interface="false" size="36" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="com.youdevise.fbplugins.junit" total_bugs="3" total_types="6" total_size="187" priority_2="2" priority_1="1">
+      <ClassStats class="com.youdevise.fbplugins.junit.IgnoredTestDetails" sourceFile="IgnoredTestDetails.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.JUnitClassVisitorTest" sourceFile="JUnitClassVisitorTest.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" sourceFile="JUnitTestIgnoredForTooLong.java" interface="false" size="41" bugs="3" priority_2="2" priority_1="1"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLongTest" sourceFile="JUnitTestIgnoredForTooLongTest.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.JUnitTestVisitor" sourceFile="JUnitTestVisitor.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.JUnitTestVisitor$JUnitTestMethodVisitor" sourceFile="JUnitTestVisitor.java" interface="false" size="20" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="com.youdevise.fbplugins.junit.benchmarks" total_bugs="4" total_types="4" total_size="31" priority_2="4">
+      <ClassStats class="com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive" sourceFile="ManyIgnoredOneActive.java" interface="false" size="11" bugs="2" priority_2="2"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.benchmarks.OneCommentedOutIgnoreTestCase" sourceFile="OneCommentedOutIgnoreTestCase.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive" sourceFile="OneIgnoredOneActive.java" interface="false" size="8" bugs="1" priority_2="1"/>
+      <ClassStats class="com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase" sourceFile="OneIgnoredTestCase.java" interface="false" size="6" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.FindBugs2" totalMilliseconds="1719" invocations="2" avgMicrosecondsPerInvocation="859662" maxMicrosecondsPerInvocation="1127824" standardDeviationMircosecondsPerInvocation="268163"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="905" invocations="375" avgMicrosecondsPerInvocation="2415" maxMicrosecondsPerInvocation="75804" standardDeviationMircosecondsPerInvocation="6435"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="558" invocations="379" avgMicrosecondsPerInvocation="1474" maxMicrosecondsPerInvocation="13287" standardDeviationMircosecondsPerInvocation="2731"/>
+      <ClassProfile name="com.youdevise.fbplugins.jmock.UnassertedMockeryDetector" totalMilliseconds="441" invocations="13" avgMicrosecondsPerInvocation="33997" maxMicrosecondsPerInvocation="438944" standardDeviationMircosecondsPerInvocation="116898"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="371" invocations="31" avgMicrosecondsPerInvocation="11995" maxMicrosecondsPerInvocation="80276" standardDeviationMircosecondsPerInvocation="21193"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="323" invocations="633" avgMicrosecondsPerInvocation="510" maxMicrosecondsPerInvocation="14938" standardDeviationMircosecondsPerInvocation="1486"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="322" invocations="86" avgMicrosecondsPerInvocation="3747" maxMicrosecondsPerInvocation="54944" standardDeviationMircosecondsPerInvocation="8397"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="307" invocations="58" avgMicrosecondsPerInvocation="5297" maxMicrosecondsPerInvocation="34802" standardDeviationMircosecondsPerInvocation="7594"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="264" invocations="58" avgMicrosecondsPerInvocation="4552" maxMicrosecondsPerInvocation="223390" standardDeviationMircosecondsPerInvocation="29070"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="260" invocations="58" avgMicrosecondsPerInvocation="4484" maxMicrosecondsPerInvocation="32059" standardDeviationMircosecondsPerInvocation="6211"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="246" invocations="59" avgMicrosecondsPerInvocation="4173" maxMicrosecondsPerInvocation="47204" standardDeviationMircosecondsPerInvocation="7733"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="229" invocations="31" avgMicrosecondsPerInvocation="7401" maxMicrosecondsPerInvocation="42617" standardDeviationMircosecondsPerInvocation="12322"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="212" invocations="310" avgMicrosecondsPerInvocation="685" maxMicrosecondsPerInvocation="11519" standardDeviationMircosecondsPerInvocation="1911"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="197" invocations="58" avgMicrosecondsPerInvocation="3399" maxMicrosecondsPerInvocation="38118" standardDeviationMircosecondsPerInvocation="6376"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="162" invocations="58" avgMicrosecondsPerInvocation="2807" maxMicrosecondsPerInvocation="63479" standardDeviationMircosecondsPerInvocation="8702"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

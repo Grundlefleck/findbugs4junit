@@ -10,7 +10,7 @@
         </Details>
     </Plugin>
 
-  <Detector class="com.youdevise.fbplugins.findbugs.junit.JUnitTestIgnoredForTooLong" >
+  <Detector class="com.youdevise.fbplugins.junit.JUnitTestIgnoredForTooLong" >
     <Details>
       <![CDATA[<p> This detector looks for JUnit test cases which have been @Ignored for too long.
         </p>]]>
@@ -25,25 +25,26 @@
 
 <Details>
   <![CDATA[<p>
-    The @Ignore annotation in JUnit allows you to exclude test cases from being executed. This is convenient when developing new functionality, but if the @Ignore are left in the source code for too long, this may indicate that a developer has forgotten to remove the annotation. 
+    The @Ignore annotation in JUnit allows you to exclude test cases from being executed. This is convenient when developing new functionality, but if the @Ignore annotation is left in the source code for too long, this may indicate that a developer has forgotten to remove it. 
     <p>
-    If the annotation has been left by mistake, developers may have a false sense of security with regard to the coverage of their tests, as they won't break when the actual functionality breaks.
-    However, @Ignores left deliberately can be a problem in much the same way that comments in source code can become a problem - they can easily get out of date, and reflect functionality that is not implemented.
-    
+    If the annotation has been left by mistake, developers may have a false sense of security with regard to the coverage of their tests, as they won't fail when the actual functionality breaks.
+    However, @Ignores left deliberately can also be a problem in much the same way that comments in source code can become a problem - they can easily get out of date, and describe functionality that is not implemented, or intended to be implemented.
+    <p>
+    <br>
     When an @Ignore has been left in the source code for too long, the recommended action is to:
     <pre>
 remove the annotation
 if ( the test passes ) {
-	leave the annotation off
+    leave the annotation off
 } else if ( the test fails but can't do anything about it and you just want FindBugs to stop annoying you ) {
-	update the comment inside the @Ignore, and re-commit to version control
+    update the comment inside the @Ignore, and re-commit to version control
 } else {
-	find out if the functionality is being used, or is expected to exist
-	if ( it is used ) {
-		fix the test, and/or the code
-	} else {
-		remove the entire test case
-	}
+    find out if the functionality is being used, or is expected to exist
+    if ( it is used ) {
+        fix the test, and/or the code
+    } else {
+        remove the entire test case
+    }
 }
     </pre>
   ]]>
