@@ -3,12 +3,13 @@ package com.youdevise.fbplugins.junit;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PluginProperties {
 
 	
-	private static final String propertyPrefix = "com.youdevise.fbplugins.junit.";
+	private static final String propertyPrefix = "";
 	
 	
 	public static final String VERSION_CONTROL_HTTP_HOST = property("versionControlHttpHost");
@@ -38,13 +39,13 @@ public class PluginProperties {
 	}
 	
 	private static String mandatory(String propertyName, String extraRequirements, String example) {
-		return propertyPrefix + propertyName;
+		return propertyPrefix + propertyName + extraRequirements + " e.g. " + example;
 	}
 	
 	public static PluginProperties fromSystemProperties() {
-		String versionControlHttpHost = System.getProperty(VERSION_CONTROL_HTTP_HOST, "");
-		String versionControlProjectRoot = System.getProperty(VERSION_CONTROL_HTTP_HOST, "");
-		String projectBaseDirName = System.getProperty(VERSION_CONTROL_HTTP_HOST, "");
+		String versionControlHttpHost = System.getProperty(VERSION_CONTROL_HTTP_HOST);
+		String versionControlProjectRoot = System.getProperty(VERSION_CONTROL_PROJECT_ROOT);
+		String projectBaseDirName = System.getProperty(PROJECT_BASE_DIR_NAME);
 		return fromArguments(versionControlHttpHost, versionControlProjectRoot, projectBaseDirName);
 	}
 
@@ -83,6 +84,12 @@ public class PluginProperties {
 
 
 	public Iterable<String> errors() { return errors; }
+	
+	public Iterable<String> properties() {
+		return Arrays.asList(VERSION_CONTROL_HTTP_HOST + "=" + versionControlHttpHost,
+						     VERSION_CONTROL_PROJECT_ROOT + "=" + versionControlProjectRoot,
+						     PROJECT_BASE_DIR_NAME + "=" + projectBaseDirName);
+	}
 
 	public String versionControlHttpHost() { return versionControlHttpHost; }
 

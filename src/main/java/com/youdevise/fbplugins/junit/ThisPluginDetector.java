@@ -18,8 +18,10 @@ import edu.umd.cs.findbugs.classfile.Global;
 public class ThisPluginDetector implements Detector {
 	
 	
-    static {
-        System.out.printf("Registered plugin detector [%s]%n", JUnitTestIgnoredForTooLong.class.getSimpleName());
+    private static final String loggingLabel = JUnitTestIgnoredForTooLong.class.getSimpleName();
+
+	static {
+        System.out.printf("Registered plugin detector [%s]%n", loggingLabel);
     }
 	private final BugReporter bugReporter;
     private PluginProperties properties;
@@ -32,9 +34,14 @@ public class ThisPluginDetector implements Detector {
 	}
 	
 	private void checkForMissingProperties() {
+		
+		for(String property: properties.properties()) {
+    		System.out.printf("[%s] Using system property: %s%n", loggingLabel, property);
+    	}
+		
         if (!properties.areValid()) {
             for(String error: properties.errors()) {
-                System.out.printf("[%s] Error in system properties: %s%n", JUnitTestIgnoredForTooLong.class.getSimpleName(), error);
+                System.out.printf("[%s] Error in system properties: %s%n", loggingLabel, error);
             }
         } else {
             DAVRepositoryFactory.setup();
@@ -65,7 +72,7 @@ public class ThisPluginDetector implements Detector {
         try {
             reader = Global.getAnalysisCache().getClassAnalysis(FBClassReader.class, classDescriptor);
         } catch (CheckedAnalysisException e) {
-            AnalysisContext.logError("Error finding old @Ignore'd tests." + classDescriptor, e);
+            AnalysisContext.logError("Error finding old @Ignore'd tests.%n" + classDescriptor, e);
             return ignoredTestCasesFinder;
         }
         reader.accept(ignoredTestCasesFinder, 0);

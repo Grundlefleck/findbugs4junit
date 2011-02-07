@@ -78,4 +78,15 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
 
     }
 
+    
+//    public static void main(String[] args) {
+//		String fullFileName = args[0];
+//		Integer lineNumber = Integer.valueOf(args[1]);
+//		String methodName = args[2];
+//		PluginProperties properties = PluginProperties.fromSystemProperties();
+//		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties));
+//		ignoreFinder.ignoredForTooLong(fullFileName, new IgnoredTestDetails(lineNumber, methodName, fullFileName));
+//		
+//	}
+    
 }

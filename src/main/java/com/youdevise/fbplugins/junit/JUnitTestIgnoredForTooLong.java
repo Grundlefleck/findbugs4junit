@@ -75,7 +75,7 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 	}
 	
     private void logError(String message, Exception e) {
-        System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s", message, e);
+        System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s%n", message, e);
     }
 
 	@Override public void report() { }
