@@ -135,7 +135,6 @@ public class JUnitTestIgnoredForTooLongTest {
 	
 	private ArgumentMatcher<IgnoredTestDetails> isIgnoredTestMethod(final String methodName) {
 		return new ArgumentMatcher<IgnoredTestDetails>() {
-
 			@Override public boolean matches(Object argument) {
 				String methodNameGiven = ((IgnoredTestDetails) argument).methodName;
 				return methodName.equals(methodNameGiven);
