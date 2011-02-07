@@ -1,5 +1,7 @@
 package com.youdevise.fbplugins.junit;
 
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
+
 import com.youdevise.fbplugins.junit.impl.FBFullSourcePathFinder;
 import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 import com.youdevise.fbplugins.junit.impl.SvnAgeOfIgnoreFinder;
@@ -17,17 +19,31 @@ public class ThisPluginDetector implements Detector {
 	
 	
     static {
-//    	DAVRepositoryFactory.setup();
         System.out.printf("Registered plugin detector [%s]%n", JUnitTestIgnoredForTooLong.class.getSimpleName());
     }
 	private final BugReporter bugReporter;
+    private PluginProperties properties;
 
 	public ThisPluginDetector(BugReporter bugReporter) {
 		this.bugReporter = bugReporter;
+		this.properties = PluginProperties.fromSystemProperties();
+		
+		checkForMissingProperties();
 	}
 	
-	private JUnitTestIgnoredForTooLong createActualDetector(ClassContext classContext) {
-		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreFinder();
+	private void checkForMissingProperties() {
+        if (!properties.areValid()) {
+            for(String error: properties.errors()) {
+                System.out.printf("[%s] Error in system properties: %s%n", JUnitTestIgnoredForTooLong.class.getSimpleName(), error);
+            }
+        } else {
+            DAVRepositoryFactory.setup();
+        }
+    }
+
+    private JUnitTestIgnoredForTooLong createActualDetector(ClassContext classContext) {
+        VersionControlledSourceFileFinder vcsFileFinder = new VersionControlledSourceFileFinder(properties);
+		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreFinder(vcsFileFinder);
 		FullSourcePathFinder fullSourcePathFinder = new FBFullSourcePathFinder();
 		UnitTestVisitor unitTestVisitor = analyseClassToDiscoverIgnoredTestCases(classContext);
 		return new JUnitTestIgnoredForTooLong(bugReporter, ageOfIgnoreFinder, fullSourcePathFinder, unitTestVisitor);
@@ -36,6 +52,8 @@ public class ThisPluginDetector implements Detector {
 	@Override public void report() { }
 
 	@Override public void visitClassContext(ClassContext classContext) {
+	    if(!properties.areValid()) { return; }
+	    
 		createActualDetector(classContext).visitClassContext(classContext);
 	}
 	

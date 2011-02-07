@@ -26,6 +26,7 @@ public class PluginPropertiesTest {
 	reportsAnErrorWhenProjectBaseDirIsNotTheSameAsLastSegmentOfVersionControlProjectRoot() {
 		properties = fromArguments("", "/svn/trunk/MyProject", "DifferentProject");
 		assertThat(properties.errors(), hasItem(PROJECT_BASE_DIR_NAME_ERROR));
+		assertThat(properties.areValid(), is(false));
 	}
 	
 	@Test public void
@@ -36,6 +37,7 @@ public class PluginPropertiesTest {
 		assertThat(errors, hasItem(VERSION_CONTROL_HTTP_HOST_ERROR));
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
+		assertThat(properties.areValid(), is(false));
 	}
 	
 	@Test public void
@@ -46,6 +48,7 @@ public class PluginPropertiesTest {
 		assertThat(errors, hasItem(VERSION_CONTROL_HTTP_HOST_ERROR));
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
+		assertThat(properties.areValid(), is(false));
 	}
 	
 	@Test public void
@@ -54,12 +57,14 @@ public class PluginPropertiesTest {
 		assertThat(properties.versionControlHttpHost(), is("http://syntacticallvalidhostname"));
 		assertThat(properties.versionControlProjectRoot(), is("/version/control/root/trunk/project"));
 		assertThat(properties.projectBaseDirName(), is("project"));
+		assertThat(properties.areValid(), is(true));
 	}
 	
 	@Test public void
 	noErrorsWhenAllFieldsAreValid() {
 		properties = PluginProperties.fromArguments("http://syntacticallvalidhostname", "/version/control/root/trunk/project", "project");
 		assertThat(properties.errors().iterator().hasNext(), is(false));
+		assertThat(properties.areValid(), is(true));
 	}
 	
 }

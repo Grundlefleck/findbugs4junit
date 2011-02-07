@@ -1,5 +1,7 @@
 package com.youdevise.fbplugins.junit;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class PluginProperties {
 			errors.add(PROJECT_BASE_DIR_NAME_ERROR);
 		}
 		
-		return new PluginProperties(errors, versionControlHttpHost, versionControlProjectRoot, projectBaseDirName);
+		return new PluginProperties(unmodifiableList(errors), versionControlHttpHost, versionControlProjectRoot, projectBaseDirName);
 	}
 
 	private static String lastSegmentOf(String path) {
@@ -87,4 +89,8 @@ public class PluginProperties {
 	public String versionControlProjectRoot() { return versionControlProjectRoot; }
 
 	public String projectBaseDirName() { return projectBaseDirName; }
+
+    public boolean areValid() {
+        return errors.isEmpty();
+    }
 }

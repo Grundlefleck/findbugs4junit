@@ -12,7 +12,7 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 
 public class FBFullSourcePathFinder implements FullSourcePathFinder {
 
-	@Override 
+    @Override 
 	public String fullSourcePath(ClassContext classContext) throws IOException {
 		JavaClass javaClass = classContext.getJavaClass();
         String sourceFile = javaClass.getSourceFileName();
