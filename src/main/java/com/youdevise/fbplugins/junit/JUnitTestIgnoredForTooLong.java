@@ -23,14 +23,17 @@
 
 package com.youdevise.fbplugins.junit;
 
+import static java.util.Arrays.asList;
+
 import java.io.IOException;
 
+import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 
 public class JUnitTestIgnoredForTooLong implements Detector {
 
@@ -55,10 +58,8 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 		try {
 			String fullSourcePath = sourcePathFinder.fullSourcePath(classContext);
 			
-			for(IgnoredTestDetails ignoredTest: unitTestVisitor.detailsOfIgnoredTests()) {
-				if (ageOfIgnoreFinder.ignoredForTooLong(fullSourcePath, ignoredTest)) {
-					doReportBug(classContext, ignoredTest.methodName);
-				}
+			for (TooOldIgnoreBug bug : ageOfIgnoreFinder.ignoredForTooLong(fullSourcePath, unitTestVisitor.detailsOfIgnoredTests())) {
+				doReportBug(classContext, bug);
 			}
 		} catch (IOException e) {
 			logError("Could not find source file location for " + classContext.getJavaClass().getFileName(), e);
@@ -67,10 +68,12 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 		}
 	}
 	
-    private void doReportBug(ClassContext classContext, String testCaseMethodName) {
+    private void doReportBug(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
         String slashedClassName = classContext.getClassDescriptor().getClassName();
-		MethodDescriptor methodDescriptor = new MethodDescriptor(slashedClassName, testCaseMethodName, "()V", false);
-        BugInstance bug = new BugInstance(this, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT).addClassAndMethod(methodDescriptor);
+        BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFile(), 
+        															tooOldIgnore.lineNumber(), tooOldIgnore.lineNumber(),
+        															-1, -1);
+        BugInstance bug = new BugInstance(this, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT).addAnnotations(asList(annotation));
         bugReporter.reportBug(bug);
 	}
 	

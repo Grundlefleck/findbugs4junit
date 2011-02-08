@@ -1,92 +1,58 @@
 package com.youdevise.fbplugins.junit.impl;
 
-import java.io.File;
-import java.util.Date;
+import static java.util.Arrays.asList;
 
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
-import org.tmatesoft.svn.core.wc.ISVNOptions;
-import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.SVNLogClient;
-import org.tmatesoft.svn.core.wc.SVNRevision;
+import java.util.Collection;
+import java.util.List;
+
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 
 import com.youdevise.fbplugins.junit.AgeOfIgnoreFinder;
+import com.youdevise.fbplugins.junit.CommittedCodeDetailsFetcher;
 import com.youdevise.fbplugins.junit.IgnoredTestDetails;
+import com.youdevise.fbplugins.junit.LineOfCommittedCode;
+import com.youdevise.fbplugins.junit.PluginProperties;
+import com.youdevise.fbplugins.junit.TooOldIgnoreBug;
 import com.youdevise.fbplugins.junit.VersionControlledSourceFileFinder;
 
 public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
 
 
     private final VersionControlledSourceFileFinder vcsFileFinder;
+	private CommittedCodeDetailsFetcher fetcher = new SvnCommittedCodeDetailsFetcher();
 
     public SvnAgeOfIgnoreFinder(VersionControlledSourceFileFinder vcsFileFinder) {
         this.vcsFileFinder = vcsFileFinder;
     }
 
-    @Override public boolean ignoredForTooLong(String fullFilePath, IgnoredTestDetails ignoredTest) {
+    @Override public List<TooOldIgnoreBug> ignoredForTooLong(String fullFilePath, List<IgnoredTestDetails> ignoredTests) {
         
         String vcsFileLocation = vcsFileFinder.location(fullFilePath);
-        logHistoryOfFile(vcsFileLocation);
-		return false;
+        
+        Collection<LineOfCommittedCode> linesOfCode = fetcher.logHistoryOfFile(vcsFileLocation);
+        
+		return getTooOldIgnoreBugs(ignoredTests, linesOfCode);
 	}
 
-    private void logHistoryOfFile(String fullFileName) {
-        try {
-            SVNURL fileURL = SVNURL.parseURIEncoded(fullFileName);
-
-            // SVNLogClient is the class with which you can perform annotations
-            SVNLogClient logClient = SVNClientManager.newInstance().getLogClient();
-            boolean ignoreMimeType = false;
-            boolean includeMergedRevisions = false;
-
-            logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, ignoreMimeType,
-                    includeMergedRevisions, new AnnotationHandler(includeMergedRevisions, false, logClient.getOptions()), null);
-        } catch (SVNException svne) {
-            System.out.println(svne.getMessage());
-        }
-
-    }
-
-    private static class AnnotationHandler implements ISVNAnnotateHandler {
-
-        public AnnotationHandler(boolean includeMergedRevisions, boolean b, ISVNOptions options) {
-        }
-
-        @Override
-        public void handleEOF() {
-        }
-
-        @Override
-        public void handleLine(Date date, long revision, String author, String line) throws SVNException {
-            System.out.printf("handleLine: %s, %s, %s, %s%n", date, revision, author, line);
-
-        }
-
-        @Override
-        public void handleLine(Date date, long revision, String author, String line, Date mergedDate, long mergedRevision,
-                String mergedAuthor, String mergedPath, int lineNumber) throws SVNException {
-            System.out.printf("handleLine: %s, %s, %s, %s, %s, %s, %s, %s, %s%n", date, revision, author, line,
-                    mergedDate, mergedRevision, mergedAuthor, mergedPath, lineNumber);
-        }
-
-        @Override
-        public boolean handleRevision(Date date, long revision, String author, File contents) throws SVNException {
-            System.out.printf("handleRevision: %s, %s, %s, %s%n", date, revision, author, contents);
-            return false;
-        }
-
-    }
+    private List<TooOldIgnoreBug> getTooOldIgnoreBugs(List<IgnoredTestDetails> ignoredTests,
+			Collection<LineOfCommittedCode> linesOfCode) {
+		throw new UnsupportedOperationException("Not yet implemented.");
+	}
 
     
-//    public static void main(String[] args) {
-//		String fullFileName = args[0];
-//		Integer lineNumber = Integer.valueOf(args[1]);
-//		String methodName = args[2];
-//		PluginProperties properties = PluginProperties.fromSystemProperties();
-//		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties));
-//		ignoreFinder.ignoredForTooLong(fullFileName, new IgnoredTestDetails(lineNumber, methodName, fullFileName));
-//		
-//	}
+    public static void main(String[] args) {
+    	DAVRepositoryFactory.setup();
+		String fullFileName = "/home/graham/dev/workspaces/projects/MutabilityDetector/src/test/java/org/mutabilitydetector/benchmarks/settermethod/SetterMethodCheckerTest.java";
+		Integer lineNumber = 46;
+		String methodName = "reassignmentOfStackConfinedObjectDoesNotFailCheck";
+		
+		PluginProperties properties = PluginProperties.fromArguments("http://mutability-detector.googlecode.com", 
+																	 "/svn/trunk/MutabilityDetector/trunk/MutabilityDetector/", 
+																	 "MutabilityDetector");
+		
+		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties));
+		ignoreFinder.ignoredForTooLong(fullFileName, asList(new IgnoredTestDetails(lineNumber, methodName, fullFileName)));
+		
+	}
     
 }

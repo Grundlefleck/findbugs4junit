@@ -1,7 +1,9 @@
 package com.youdevise.fbplugins.junit;
 
+import java.util.List;
+
 public interface AgeOfIgnoreFinder {
 
-	boolean ignoredForTooLong(String fullFilePath, IgnoredTestDetails ignoredTest);
+	List<TooOldIgnoreBug> ignoredForTooLong(String fullFilePath, List<IgnoredTestDetails> detailsOfIgnoredTests);
 
 }

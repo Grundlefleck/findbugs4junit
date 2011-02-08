@@ -12,8 +12,9 @@ public class VersionControlledSourceFileFinder {
         String vcsRoot = properties.versionControlHttpHost() + properties.versionControlProjectRoot() + "/";
 
         String vcsSegmentOfFileName = fullFilePath.substring(fullFilePath.lastIndexOf(properties.projectBaseDirName()));
+        String vcsRootWithoutProjectDir = vcsRoot.substring(0, vcsRoot.lastIndexOf(properties.projectBaseDirName()));
 
-        return vcsRoot + vcsSegmentOfFileName;
+        return vcsRootWithoutProjectDir + vcsSegmentOfFileName;
     }
 
 }
