@@ -5,6 +5,7 @@ import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 import com.youdevise.fbplugins.junit.impl.FBFullSourcePathFinder;
 import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 import com.youdevise.fbplugins.junit.impl.SvnAgeOfIgnoreFinder;
+import com.youdevise.fbplugins.junit.impl.SvnCommittedCodeDetailsFetcher;
 
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
@@ -50,7 +51,8 @@ public class ThisPluginDetector implements Detector {
 
     private JUnitTestIgnoredForTooLong createActualDetector(ClassContext classContext) {
         VersionControlledSourceFileFinder vcsFileFinder = new VersionControlledSourceFileFinder(properties);
-		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreFinder(vcsFileFinder);
+        CommittedCodeDetailsFetcher committedCodeDetailsFetcher = new SvnCommittedCodeDetailsFetcher();
+		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreFinder(vcsFileFinder, committedCodeDetailsFetcher);
 		FullSourcePathFinder fullSourcePathFinder = new FBFullSourcePathFinder();
 		UnitTestVisitor unitTestVisitor = analyseClassToDiscoverIgnoredTestCases(classContext);
 		return new JUnitTestIgnoredForTooLong(bugReporter, ageOfIgnoreFinder, fullSourcePathFinder, unitTestVisitor);

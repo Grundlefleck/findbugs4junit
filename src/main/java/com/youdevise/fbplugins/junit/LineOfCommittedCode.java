@@ -17,5 +17,10 @@ public class LineOfCommittedCode {
 		this.lineContents = lineContents;
 		this.lineNumber = lineNumber;
 	}
+
+	@Override public String toString() {
+		return "LineOfCommittedCode [r" + revision + " " + author + " " + dateOfCommit + " " + lineNumber + " " + lineContents + "]";
+	}
 	
+
 }

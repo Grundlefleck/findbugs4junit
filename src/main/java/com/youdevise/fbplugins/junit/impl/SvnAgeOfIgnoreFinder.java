@@ -2,7 +2,7 @@ package com.youdevise.fbplugins.junit.impl;
 
 import static java.util.Arrays.asList;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
@@ -19,24 +19,38 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
 
 
     private final VersionControlledSourceFileFinder vcsFileFinder;
-	private CommittedCodeDetailsFetcher fetcher = new SvnCommittedCodeDetailsFetcher();
+	private final CommittedCodeDetailsFetcher committedCodeDetailsFetcher;
 
-    public SvnAgeOfIgnoreFinder(VersionControlledSourceFileFinder vcsFileFinder) {
+    public SvnAgeOfIgnoreFinder(VersionControlledSourceFileFinder vcsFileFinder, CommittedCodeDetailsFetcher committedCodeDetailsFetcher) {
         this.vcsFileFinder = vcsFileFinder;
+		this.committedCodeDetailsFetcher = committedCodeDetailsFetcher;
     }
 
     @Override public List<TooOldIgnoreBug> ignoredForTooLong(String fullFilePath, List<IgnoredTestDetails> ignoredTests) {
         
         String vcsFileLocation = vcsFileFinder.location(fullFilePath);
         
-        Collection<LineOfCommittedCode> linesOfCode = fetcher.logHistoryOfFile(vcsFileLocation);
+        List<LineOfCommittedCode> linesOfCode = committedCodeDetailsFetcher.logHistoryOfFile(vcsFileLocation);
         
 		return getTooOldIgnoreBugs(ignoredTests, linesOfCode);
 	}
 
-    private List<TooOldIgnoreBug> getTooOldIgnoreBugs(List<IgnoredTestDetails> ignoredTests,
-			Collection<LineOfCommittedCode> linesOfCode) {
-		throw new UnsupportedOperationException("Not yet implemented.");
+    private List<TooOldIgnoreBug> getTooOldIgnoreBugs(List<IgnoredTestDetails> ignoredTests, List<LineOfCommittedCode> linesOfCode) {
+    	List<TooOldIgnoreBug> tooOldIgnores = new ArrayList<TooOldIgnoreBug>();
+    	for(int i = 0; i < ignoredTests.size(); i++) {
+    		IgnoredTestDetails ignoredTest = ignoredTests.get(i);
+    		LineOfCommittedCode firstLineInIgnoredMethod = linesOfCode.get(ignoredTest.lineNumber - 1);
+    		
+    		for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
+    			LineOfCommittedCode readingBack = linesOfCode.get(j);
+    			if(readingBack.lineContents.contains("@Ignore")) {
+    				tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, readingBack.lineNumber));
+    			}
+    		}
+    		
+    	}
+    	
+    	return tooOldIgnores;
 	}
 
     
@@ -50,8 +64,12 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
 																	 "/svn/trunk/MutabilityDetector/trunk/MutabilityDetector/", 
 																	 "MutabilityDetector");
 		
-		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties));
-		ignoreFinder.ignoredForTooLong(fullFileName, asList(new IgnoredTestDetails(lineNumber, methodName, fullFileName)));
+		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties), new SvnCommittedCodeDetailsFetcher());
+		List<TooOldIgnoreBug> ignoredForTooLong = ignoreFinder.ignoredForTooLong(fullFileName, asList(new IgnoredTestDetails(lineNumber, methodName, fullFileName)));
+		
+		for (TooOldIgnoreBug tooOldIgnoreBug : ignoredForTooLong) {
+			System.out.println(tooOldIgnoreBug);
+		}
 		
 	}
     

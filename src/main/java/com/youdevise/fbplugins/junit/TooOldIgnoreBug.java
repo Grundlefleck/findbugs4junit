@@ -2,8 +2,16 @@ package com.youdevise.fbplugins.junit;
 
 public class TooOldIgnoreBug {
 
-	public int lineNumber() { return 0; }
+	private final String sourceFileName;
+	private final int lineNumber;
 
-	public String sourceFile() { return ""; }
+	public TooOldIgnoreBug(String sourceFileName, int lineNumber) {
+		this.sourceFileName = sourceFileName;
+		this.lineNumber = lineNumber;
+	}
+
+	public int lineNumber() { return lineNumber; }
+
+	public String sourceFileName() { return sourceFileName; }
 
 }

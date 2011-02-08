@@ -70,7 +70,7 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 	
     private void doReportBug(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
         String slashedClassName = classContext.getClassDescriptor().getClassName();
-        BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFile(), 
+        BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFileName(), 
         															tooOldIgnore.lineNumber(), tooOldIgnore.lineNumber(),
         															-1, -1);
         BugInstance bug = new BugInstance(this, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT).addAnnotations(asList(annotation));

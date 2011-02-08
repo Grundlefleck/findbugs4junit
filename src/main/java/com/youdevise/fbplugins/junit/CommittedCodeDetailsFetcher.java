@@ -1,10 +1,10 @@
 package com.youdevise.fbplugins.junit;
 
-import java.util.Collection;
+import java.util.List;
 
 
 public interface CommittedCodeDetailsFetcher {
 
-	Collection<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile);
+	List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile);
 
 }

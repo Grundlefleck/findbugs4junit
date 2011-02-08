@@ -62,6 +62,7 @@ public class JUnitTestIgnoredForTooLongTest {
     private AgeOfIgnoreFinder ageOfIgnoreFinder;
 	private FullSourcePathFinder sourcePathFinder;
 	private UnitTestVisitor unitTestVisitor;
+	private TooOldIgnoreBug ignoreBug = new TooOldIgnoreBug("SomeSourceFile.java", 27);
 
     @Before public void setUp() {
         bugReporter = mock(BugReporter.class);
@@ -89,7 +90,8 @@ public class JUnitTestIgnoredForTooLongTest {
 		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
 		when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(Arrays.asList(new IgnoredTestDetails(20, "someMethodName", fileNameWithIgnore)));
 		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class))).thenReturn(oldIgnoreBugs(new TooOldIgnoreBug()));
+		
+		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class))).thenReturn(oldIgnoreBugs());
 		
 		constructDetector();
 		
@@ -104,7 +106,7 @@ public class JUnitTestIgnoredForTooLongTest {
 																		new IgnoredTestDetails(55, "someOtherMethodName", fileNameWithIgnore)));
 		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
 		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class)))
-									.thenReturn(oldIgnoreBugs(new TooOldIgnoreBug(), new TooOldIgnoreBug()));
+									.thenReturn(oldIgnoreBugs(ignoreBug, ignoreBug));
 		
 		constructDetector();
 		
@@ -133,7 +135,7 @@ public class JUnitTestIgnoredForTooLongTest {
 		mockIgnoredTestInFile("OneIgnoredTestCase.java", "isSoTooOld");
 		
 		when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("notTooOld")))).thenReturn(oldIgnoreBugs());
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("isSoTooOld")))).thenReturn(oldIgnoreBugs(new TooOldIgnoreBug()));
+		when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("isSoTooOld")))).thenReturn(oldIgnoreBugs(ignoreBug));
 		
 		constructDetector();
 		
