@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PluginProperties {
-
-	
 	private static final String propertyPrefix = "";
 	
 	
@@ -39,7 +37,7 @@ public class PluginProperties {
 	public static PluginProperties fromSystemProperties() {
 		String versionControlProjectRoot = System.getProperty(VERSION_CONTROL_PROJECT_ROOT);
 		String projectBaseDirName = System.getProperty(PROJECT_BASE_DIR_NAME);
-		String tooOldThreshold = "";
+		String tooOldThreshold = System.getProperty(TOO_OLD_THRESHOLD);
 		return fromArguments(versionControlProjectRoot, projectBaseDirName, tooOldThreshold);
 	}
 
@@ -87,13 +85,12 @@ public class PluginProperties {
 	
 	public Iterable<String> properties() {
 		return Arrays.asList(VERSION_CONTROL_PROJECT_ROOT + "=" + versionControlProjectRoot,
-						     PROJECT_BASE_DIR_NAME + "=" + projectBaseDirName);
+						     PROJECT_BASE_DIR_NAME + "=" + projectBaseDirName,
+						     TOO_OLD_THRESHOLD + "=" + tooOldThreshold);
 	}
 
 	public String versionControlProjectRoot() { return versionControlProjectRoot; }
-
 	public String projectBaseDirName() { return projectBaseDirName; }
-
 	public Integer tooOldThreshold() { return tooOldThreshold; }
 
 	public boolean areValid() {

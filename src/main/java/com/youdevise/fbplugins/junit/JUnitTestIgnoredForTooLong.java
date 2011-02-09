@@ -23,8 +23,6 @@
 
 package com.youdevise.fbplugins.junit;
 
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 
 import edu.umd.cs.findbugs.BugAnnotation;
@@ -57,7 +55,6 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 	public void visitClassContext(ClassContext classContext) {
 		
 		if(!unitTestVisitor.classContainsIgnoredTests()) { return; }
-		
 		try {
 			String fullSourcePath = sourcePathFinder.fullSourcePath(classContext);
 			
@@ -75,10 +72,10 @@ public class JUnitTestIgnoredForTooLong implements Detector {
         String slashedClassName = classContext.getClassDescriptor().getClassName();
         BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFileName(), 
         															tooOldIgnore.lineNumber(), tooOldIgnore.lineNumber(),
-        															-1, -1);
+        															0, 0);
         BugInstance bug = new BugInstance(pluginToRegisterBugsWith, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT)
                                             .addClass(classContext.getJavaClass())
-                                            .addAnnotations(asList(annotation));
+                                            .add(annotation);
         bugReporter.reportBug(bug);
 	}
 	
