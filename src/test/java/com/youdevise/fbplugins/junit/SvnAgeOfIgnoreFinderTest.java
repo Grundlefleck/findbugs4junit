@@ -3,7 +3,6 @@ package com.youdevise.fbplugins.junit;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,8 +10,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Test;
 
 import com.youdevise.fbplugins.junit.impl.SvnAgeOfIgnoreFinder;

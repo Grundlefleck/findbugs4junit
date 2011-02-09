@@ -1,5 +1,6 @@
 package com.youdevise.fbplugins.junit;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
@@ -14,9 +15,12 @@ public class PluginProperties {
 	
 	public static final String VERSION_CONTROL_PROJECT_ROOT = property("versionControlProjectRoot");
 	public static final String PROJECT_BASE_DIR_NAME = property("projectBaseDirName");
+	public static final String TOO_OLD_THRESHOLD = property("tooOldThreshold");
 	
 	public static final String VERSION_CONTROL_PROJECT_ROOT_ERROR = mandatory(VERSION_CONTROL_PROJECT_ROOT, ", and must begin with 'http://'", "http://srcserver/svn/trunk/MyProject");
 	public static final String PROJECT_BASE_DIR_NAME_ERROR = mandatory(PROJECT_BASE_DIR_NAME, "", "/home/me/workspace/MyProject");
+	public static final String TOO_OLD_THRESHOLD_ERROR = mandatory(TOO_OLD_THRESHOLD, ", an integer for days old an @Ignore has to be", "14");
+
 
 	private final List<String> errors;
 	private final String versionControlProjectRoot;
@@ -50,8 +54,21 @@ public class PluginProperties {
 			errors.add(PROJECT_BASE_DIR_NAME_ERROR);
 		}
 		
+		if(isBlank(tooOldThreshold) || !isNumber(tooOldThreshold)) {
+			tooOldThreshold = "14";
+			errors.add(TOO_OLD_THRESHOLD_ERROR);
+		}
 		
-		return new PluginProperties(unmodifiableList(errors), versionControlProjectRoot, projectBaseDirName, Integer.valueOf(14));
+		return new PluginProperties(unmodifiableList(errors), versionControlProjectRoot, projectBaseDirName, parseInt(tooOldThreshold));
+	}
+
+	private static boolean isNumber(String tooOldThreshold) {
+		try {
+			Integer.parseInt(tooOldThreshold);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	private static boolean isBlank(String property) {
@@ -77,7 +94,10 @@ public class PluginProperties {
 
 	public String projectBaseDirName() { return projectBaseDirName; }
 
-    public boolean areValid() {
+	public Integer tooOldThreshold() { return tooOldThreshold; }
+
+	public boolean areValid() {
         return errors.isEmpty();
     }
+
 }

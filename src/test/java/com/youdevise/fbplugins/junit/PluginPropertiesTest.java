@@ -1,6 +1,7 @@
-package com.youdevise.fbplugins;
+package com.youdevise.fbplugins.junit;
 
 import static com.youdevise.fbplugins.junit.PluginProperties.PROJECT_BASE_DIR_NAME_ERROR;
+import static com.youdevise.fbplugins.junit.PluginProperties.TOO_OLD_THRESHOLD_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_PROJECT_ROOT_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.fromArguments;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -17,34 +18,36 @@ public class PluginPropertiesTest {
 
 	@Test public void
 	reportsAnErrorWhenTheHostNameDoesNotBeginWithHttp() {
-		properties = fromArguments("invalid host name", "");
+		properties = fromArguments("invalid host name", "", "");
 		assertThat(properties.errors(), hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 	}
 	
 	@Test public void
 	doesNotReportsAnErrorWhenProjectBaseDirIsNotTheSameAsLastSegmentOfVersionControlProjectRoot() {
-		properties = fromArguments("http://src/svn/trunk/MyProject", "DifferentProject");
+		properties = fromArguments("http://src/svn/trunk/MyProject", "DifferentProject", "10");
 		assertThat(properties.errors().iterator().hasNext(),is(false));
 		assertThat(properties.areValid(), is(true));
 	}
 	
 	@Test public void
 	reportsAnErrorWhenEachMandatoryFieldIsMissing() {
-		properties = fromArguments(null, null);
+		properties = fromArguments(null, null, null);
 		Iterable<String> errors = properties.errors();
 		
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
+		assertThat(errors, hasItem(TOO_OLD_THRESHOLD_ERROR));
 		assertThat(properties.areValid(), is(false));
 	}
 	
 	@Test public void
 	reportsAnErrorWhenEachMandatoryFieldIsBlank() {
-		properties = fromArguments("", "");
+		properties = fromArguments("", "", "");
 		Iterable<String> errors = properties.errors();
 		
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
+		assertThat(errors, hasItem(TOO_OLD_THRESHOLD_ERROR));
 		assertThat(properties.areValid(), is(false));
 	}
 	

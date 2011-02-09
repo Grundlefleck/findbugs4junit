@@ -34,7 +34,6 @@ import java.util.List;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 
-import com.youdevise.fbplugins.junit.IgnoredTestDetails;
 import com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.OneCommentedOutIgnoreTestCase;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive;
