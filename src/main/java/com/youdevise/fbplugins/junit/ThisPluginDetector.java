@@ -18,44 +18,51 @@ import edu.umd.cs.findbugs.classfile.Global;
 
 public class ThisPluginDetector implements Detector {
 	
+	private static class SetupChecker {
+	    
+	    private SetupChecker() { }
+	    public static SetupChecker SINGLETON_INSTANCE = new SetupChecker();
+	    
+	    public PluginProperties initialiseProperties() {
+	        PluginProperties properties = PluginProperties.fromSystemProperties();
+	        for(String property: properties.properties()) {
+	            System.out.printf("[%s] Using system property: %s%n", loggingLabel, property);
+	        }
+	        
+	        if (!properties.areValid()) {
+	            for(String error: properties.errors()) {
+	                System.out.printf("[%s] Error in system properties: %s%n", loggingLabel, error);
+	            }
+	        } else {
+	            DAVRepositoryFactory.setup();
+	        }
+	        
+	        return properties;
+	    }
+	}
+    
 	
+    
     private static final String loggingLabel = JUnitTestIgnoredForTooLong.class.getSimpleName();
 
 	static {
         System.out.printf("Registered plugin detector [%s]%n", loggingLabel);
+        properties = SetupChecker.SINGLETON_INSTANCE.initialiseProperties();
     }
 	private final BugReporter bugReporter;
-    private PluginProperties properties;
+    private static PluginProperties properties;
 
 	public ThisPluginDetector(BugReporter bugReporter) {
 		this.bugReporter = bugReporter;
-		this.properties = PluginProperties.fromSystemProperties();
-		
-		checkForMissingProperties();
 	}
 	
-	private void checkForMissingProperties() {
-		
-		for(String property: properties.properties()) {
-    		System.out.printf("[%s] Using system property: %s%n", loggingLabel, property);
-    	}
-		
-        if (!properties.areValid()) {
-            for(String error: properties.errors()) {
-                System.out.printf("[%s] Error in system properties: %s%n", loggingLabel, error);
-            }
-        } else {
-            DAVRepositoryFactory.setup();
-        }
-    }
-
     private JUnitTestIgnoredForTooLong createActualDetector(ClassContext classContext) {
         VersionControlledSourceFileFinder vcsFileFinder = new VersionControlledSourceFileFinder(properties);
         CommittedCodeDetailsFetcher committedCodeDetailsFetcher = new SvnCommittedCodeDetailsFetcher();
 		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreFinder(vcsFileFinder, committedCodeDetailsFetcher);
 		FullSourcePathFinder fullSourcePathFinder = new FBFullSourcePathFinder();
 		UnitTestVisitor unitTestVisitor = analyseClassToDiscoverIgnoredTestCases(classContext);
-		return new JUnitTestIgnoredForTooLong(bugReporter, ageOfIgnoreFinder, fullSourcePathFinder, unitTestVisitor);
+		return new JUnitTestIgnoredForTooLong(this, bugReporter, ageOfIgnoreFinder, fullSourcePathFinder, unitTestVisitor);
 	}
 
 	@Override public void report() { }

@@ -11,11 +11,24 @@ import com.youdevise.fbplugins.junit.VersionControlledSourceFileFinder;
 public class VersionControlledSourceFileFinderTest {
     @Test public void
     usesFullFilePathAndVersionControlPropertiesToCreateAnHttpLocationOfSourceFile() throws Exception {
-        PluginProperties properties = PluginProperties.fromArguments("http://somehost", "/some/vcs/dir/MyProject", "MyProject");
+        PluginProperties properties = PluginProperties.fromArguments("http://somehost/some/vcs/dir/trunk", 
+                                                                     "/home/jemima/workspace/MyProject");
         String fullFilePath = "/home/jemima/workspace/MyProject/src/org/surrender/MyMainClass.java";
         
         String location = new VersionControlledSourceFileFinder(properties).location(fullFilePath);
         
-        assertThat(location, is("http://somehost/some/vcs/dir/MyProject/src/org/surrender/MyMainClass.java"));
+        assertThat(location, is("http://somehost/some/vcs/dir/trunk/src/org/surrender/MyMainClass.java"));
     }
+    
+    @Test public void
+    willHandleExtraSlashes() throws Exception {
+        PluginProperties properties = PluginProperties.fromArguments("http://somehost/some/vcs/dir/trunk/",
+                                                                     "/home/jemima/workspace/MyProject/");
+        String fullFilePath = "/home/jemima/workspace/MyProject/src/org/surrender/MyMainClass.java";
+        
+        String location = new VersionControlledSourceFileFinder(properties).location(fullFilePath);
+        
+        assertThat(location, is("http://somehost/some/vcs/dir/trunk/src/org/surrender/MyMainClass.java"));
+    }
+    
 }

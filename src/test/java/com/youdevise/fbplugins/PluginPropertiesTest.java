@@ -1,7 +1,6 @@
 package com.youdevise.fbplugins;
 
 import static com.youdevise.fbplugins.junit.PluginProperties.PROJECT_BASE_DIR_NAME_ERROR;
-import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_HTTP_HOST_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_PROJECT_ROOT_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.fromArguments;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -18,23 +17,22 @@ public class PluginPropertiesTest {
 
 	@Test public void
 	reportsAnErrorWhenTheHostNameDoesNotBeginWithHttp() {
-		properties = fromArguments("invalid host name", "", "");
-		assertThat(properties.errors(), hasItem(VERSION_CONTROL_HTTP_HOST_ERROR));
+		properties = fromArguments("invalid host name", "");
+		assertThat(properties.errors(), hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 	}
 	
 	@Test public void
-	reportsAnErrorWhenProjectBaseDirIsNotTheSameAsLastSegmentOfVersionControlProjectRoot() {
-		properties = fromArguments("", "/svn/trunk/MyProject", "DifferentProject");
-		assertThat(properties.errors(), hasItem(PROJECT_BASE_DIR_NAME_ERROR));
-		assertThat(properties.areValid(), is(false));
+	doesNotReportsAnErrorWhenProjectBaseDirIsNotTheSameAsLastSegmentOfVersionControlProjectRoot() {
+		properties = fromArguments("http://src/svn/trunk/MyProject", "DifferentProject");
+		assertThat(properties.errors().iterator().hasNext(),is(false));
+		assertThat(properties.areValid(), is(true));
 	}
 	
 	@Test public void
 	reportsAnErrorWhenEachMandatoryFieldIsMissing() {
-		properties = fromArguments(null, null, null);
+		properties = fromArguments(null, null);
 		Iterable<String> errors = properties.errors();
 		
-		assertThat(errors, hasItem(VERSION_CONTROL_HTTP_HOST_ERROR));
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
 		assertThat(properties.areValid(), is(false));
@@ -42,10 +40,9 @@ public class PluginPropertiesTest {
 	
 	@Test public void
 	reportsAnErrorWhenEachMandatoryFieldIsBlank() {
-		properties = fromArguments("", "", "");
+		properties = fromArguments("", "");
 		Iterable<String> errors = properties.errors();
 		
-		assertThat(errors, hasItem(VERSION_CONTROL_HTTP_HOST_ERROR));
 		assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
 		assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
 		assertThat(properties.areValid(), is(false));
@@ -53,18 +50,23 @@ public class PluginPropertiesTest {
 	
 	@Test public void
 	propertiesContainMandatoryValues() {
-		properties = PluginProperties.fromArguments("http://syntacticallvalidhostname", "/version/control/root/trunk/project", "project");
-		assertThat(properties.versionControlHttpHost(), is("http://syntacticallvalidhostname"));
-		assertThat(properties.versionControlProjectRoot(), is("/version/control/root/trunk/project"));
+		properties = PluginProperties.fromArguments("http://syntacticallvalidhostname/version/control/root/trunk/project", "project", "12");
+		assertThat(properties.versionControlProjectRoot(), is("http://syntacticallvalidhostname/version/control/root/trunk/project"));
 		assertThat(properties.projectBaseDirName(), is("project"));
+		assertThat(properties.tooOldThreshold(), is(12));
 		assertThat(properties.areValid(), is(true));
 	}
 	
 	@Test public void
 	noErrorsWhenAllFieldsAreValid() {
-		properties = PluginProperties.fromArguments("http://syntacticallvalidhostname", "/version/control/root/trunk/project", "project");
+		properties = PluginProperties.fromArguments("http://syntacticallvalidhostname/version/control/root/trunk/project", "project", "4");
 		assertThat(properties.errors().iterator().hasNext(), is(false));
 		assertThat(properties.areValid(), is(true));
 	}
+	
+//	@Test
+//    public void reportsAnErrorWhenTheIgnoreDurationIsMissing() throws Exception {
+//        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", null);
+//    }
 	
 }

@@ -14,4 +14,12 @@ public class TooOldIgnoreBug {
 
 	public String sourceFileName() { return sourceFileName; }
 
+    @Override
+    public String toString() {
+        return "TooOldIgnoreBug [@ line " + lineNumber + " of " + sourceFileName + "]";
+    }
+
+	
+	
+	
 }

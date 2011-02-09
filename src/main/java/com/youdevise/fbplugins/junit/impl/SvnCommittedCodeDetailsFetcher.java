@@ -2,9 +2,9 @@ package com.youdevise.fbplugins.junit.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
@@ -18,7 +18,7 @@ import com.youdevise.fbplugins.junit.LineOfCommittedCode;
 
 public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetcher {
 
-	@Override public Collection<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile) {
+	@Override public List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile) {
 		try {
             SVNURL fileURL = SVNURL.parseURIEncoded(httpLocationOfVersionControlledSourceFile);
 
@@ -27,9 +27,13 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
             boolean includeMergedRevisions = false;
 
             AnnotationHandler handler = new AnnotationHandler();
-			logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, ignoreMimeType,
-                    includeMergedRevisions, handler, null);
+			logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, 
+			                     ignoreMimeType, includeMergedRevisions, handler, null);
             
+			for (LineOfCommittedCode line : handler.lines()) {
+			    System.out.println(line);
+            }
+			
 			return handler.lines();
             
         } catch (SVNException svne) {
@@ -41,7 +45,7 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
 	
     private static class AnnotationHandler implements ISVNAnnotateHandler {
 
-    	private Collection<LineOfCommittedCode> lines = new ArrayList<LineOfCommittedCode>();
+    	private List<LineOfCommittedCode> lines = new ArrayList<LineOfCommittedCode>();
     	
         @Override
         public void handleLine(Date date, long revision, String author, String line, Date mergedDate, long mergedRevision,
@@ -49,7 +53,7 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
             lines.add(new LineOfCommittedCode(date, revision, author, line, lineNumber));
         }
 
-        public Collection<LineOfCommittedCode> lines() { return Collections.unmodifiableCollection(lines); }
+        public List<LineOfCommittedCode> lines() { return Collections.unmodifiableList(lines); }
         
 		@Override public void handleEOF() { }
 

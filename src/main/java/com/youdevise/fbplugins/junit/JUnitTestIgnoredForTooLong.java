@@ -44,8 +44,11 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 	private final FullSourcePathFinder sourcePathFinder;
 	private final UnitTestVisitor unitTestVisitor;
 
-	public JUnitTestIgnoredForTooLong(BugReporter bugReporter, AgeOfIgnoreFinder ageOfIgnoreFinder, FullSourcePathFinder sourcePathFinder, UnitTestVisitor visitor) {
-		this.bugReporter = bugReporter;
+    private final Detector pluginToRegisterBugsWith;
+
+	public JUnitTestIgnoredForTooLong(Detector pluginToRegisterBugsWith, BugReporter bugReporter, AgeOfIgnoreFinder ageOfIgnoreFinder, FullSourcePathFinder sourcePathFinder, UnitTestVisitor visitor) {
+		this.pluginToRegisterBugsWith = pluginToRegisterBugsWith;
+        this.bugReporter = bugReporter;
 		this.ageOfIgnoreFinder = ageOfIgnoreFinder;
 		this.sourcePathFinder = sourcePathFinder;
 		this.unitTestVisitor = visitor;
@@ -73,7 +76,9 @@ public class JUnitTestIgnoredForTooLong implements Detector {
         BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFileName(), 
         															tooOldIgnore.lineNumber(), tooOldIgnore.lineNumber(),
         															-1, -1);
-        BugInstance bug = new BugInstance(this, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT).addAnnotations(asList(annotation));
+        BugInstance bug = new BugInstance(pluginToRegisterBugsWith, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT)
+                                            .addClass(classContext.getJavaClass())
+                                            .addAnnotations(asList(annotation));
         bugReporter.reportBug(bug);
 	}
 	

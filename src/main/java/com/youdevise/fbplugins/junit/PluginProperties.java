@@ -12,26 +12,16 @@ public class PluginProperties {
 	private static final String propertyPrefix = "";
 	
 	
-	public static final String VERSION_CONTROL_HTTP_HOST = property("versionControlHttpHost");
 	public static final String VERSION_CONTROL_PROJECT_ROOT = property("versionControlProjectRoot");
 	public static final String PROJECT_BASE_DIR_NAME = property("projectBaseDirName");
-
 	
-	public static final String VERSION_CONTROL_HTTP_HOST_ERROR = mandatory(VERSION_CONTROL_HTTP_HOST, ", and must begin with 'http'", "http://mysvnserver");
-	public static final String VERSION_CONTROL_PROJECT_ROOT_ERROR = mandatory(VERSION_CONTROL_PROJECT_ROOT, ", and must begin with '/'", "/svn/trunk/MyProject");
-	public static final String PROJECT_BASE_DIR_NAME_ERROR = mandatory(PROJECT_BASE_DIR_NAME, ", and must be the same as the last segment of the " + VERSION_CONTROL_PROJECT_ROOT, 
-			"MyProject");
+	public static final String VERSION_CONTROL_PROJECT_ROOT_ERROR = mandatory(VERSION_CONTROL_PROJECT_ROOT, ", and must begin with 'http://'", "http://srcserver/svn/trunk/MyProject");
+	public static final String PROJECT_BASE_DIR_NAME_ERROR = mandatory(PROJECT_BASE_DIR_NAME, "", "/home/me/workspace/MyProject");
 
 	private final List<String> errors;
-
-
-	private final String versionControlHttpHost;
-
-
 	private final String versionControlProjectRoot;
-
-
 	private final String projectBaseDirName;
+    private final int tooOldThreshold;
 
 
 	private static String property(String propertyName) {
@@ -43,55 +33,45 @@ public class PluginProperties {
 	}
 	
 	public static PluginProperties fromSystemProperties() {
-		String versionControlHttpHost = System.getProperty(VERSION_CONTROL_HTTP_HOST);
 		String versionControlProjectRoot = System.getProperty(VERSION_CONTROL_PROJECT_ROOT);
 		String projectBaseDirName = System.getProperty(PROJECT_BASE_DIR_NAME);
-		return fromArguments(versionControlHttpHost, versionControlProjectRoot, projectBaseDirName);
+		String tooOldThreshold = "";
+		return fromArguments(versionControlProjectRoot, projectBaseDirName, tooOldThreshold);
 	}
 
-	public static PluginProperties fromArguments(String versionControlHttpHost, String versionControlProjectRoot, String projectBaseDirName) {
+	public static PluginProperties fromArguments(String versionControlProjectRoot, String projectBaseDirName, String tooOldThreshold) {
 		List<String> errors = new ArrayList<String>();
-		if(isBlank(versionControlHttpHost) || !(versionControlHttpHost.startsWith("http"))) {
-			errors.add(VERSION_CONTROL_HTTP_HOST_ERROR);
-		}
 		
-		if(isBlank(versionControlProjectRoot) || !(versionControlProjectRoot.startsWith("/"))) {
+		if(isBlank(versionControlProjectRoot) || !(versionControlProjectRoot.startsWith("http://"))) {
 			errors.add(VERSION_CONTROL_PROJECT_ROOT_ERROR);
 		} 
 		
-		String lastSegment = isBlank(versionControlProjectRoot) ? "" : lastSegmentOf(versionControlProjectRoot);
-		if(isBlank(projectBaseDirName) || !(projectBaseDirName.equals(lastSegment))) {
+		if(isBlank(projectBaseDirName)) {
 			errors.add(PROJECT_BASE_DIR_NAME_ERROR);
 		}
 		
-		return new PluginProperties(unmodifiableList(errors), versionControlHttpHost, versionControlProjectRoot, projectBaseDirName);
-	}
-
-	private static String lastSegmentOf(String path) {
-		return path.substring(path.lastIndexOf("/") + 1);
+		
+		return new PluginProperties(unmodifiableList(errors), versionControlProjectRoot, projectBaseDirName, Integer.valueOf(14));
 	}
 
 	private static boolean isBlank(String property) {
 		return property == null || property.isEmpty();
 	}
 	
-	public PluginProperties(List<String> errors, String versionControlHttpHost, String versionControlProjectRoot, String projectBaseDirName) {
+	public PluginProperties(List<String> errors, String versionControlProjectRoot, String projectBaseDirName, int tooOldThreshold) {
 		this.errors = errors;
-		this.versionControlHttpHost = versionControlHttpHost;
 		this.versionControlProjectRoot = versionControlProjectRoot;
 		this.projectBaseDirName = projectBaseDirName;
+        this.tooOldThreshold = tooOldThreshold;
 	}
 
 
-	public Iterable<String> errors() { return errors; }
+    public Iterable<String> errors() { return errors; }
 	
 	public Iterable<String> properties() {
-		return Arrays.asList(VERSION_CONTROL_HTTP_HOST + "=" + versionControlHttpHost,
-						     VERSION_CONTROL_PROJECT_ROOT + "=" + versionControlProjectRoot,
+		return Arrays.asList(VERSION_CONTROL_PROJECT_ROOT + "=" + versionControlProjectRoot,
 						     PROJECT_BASE_DIR_NAME + "=" + projectBaseDirName);
 	}
-
-	public String versionControlHttpHost() { return versionControlHttpHost; }
 
 	public String versionControlProjectRoot() { return versionControlProjectRoot; }
 
