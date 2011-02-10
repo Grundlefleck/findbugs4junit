@@ -10,9 +10,13 @@ public class VersionControlledSourceFileFinder {
 
     public String location(String fullFilePath) {
         String vcsRoot = stripTrailingSlash(properties.versionControlProjectRoot());
-        int indexOfDirInProjectBaseDir = fullFilePath.lastIndexOf(properties.projectBaseDirName()) + properties.projectBaseDirName().length();
+        String baseDirPath = properties.projectBaseDirName();
+        int indexOfDirInProjectBaseDir = fullFilePath.lastIndexOf(baseDirPath) + properties.projectBaseDirName().length();
         String pathFromBaseDirOfLocalProject = stripLeadingSlash(fullFilePath.substring(indexOfDirInProjectBaseDir));
-        return vcsRoot + "/" + pathFromBaseDirOfLocalProject;
+        
+        String fullVcsPath = vcsRoot + "/" + pathFromBaseDirOfLocalProject;
+        
+        return fullVcsPath;
     }
 
     private String stripLeadingSlash(String path) {

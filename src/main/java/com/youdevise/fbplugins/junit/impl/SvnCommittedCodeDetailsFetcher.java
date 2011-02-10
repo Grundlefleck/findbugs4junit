@@ -30,10 +30,6 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
             AnnotationHandler handler = new AnnotationHandler();
 			logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, 
 			                     ignoreMimeType, includeMergedRevisions, handler, null);
-            
-			for (LineOfCommittedCode line : handler.lines()) {
-			    System.out.println(line);
-            }
 			
 			return handler.lines();
             

@@ -42,26 +42,44 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
     private List<TooOldIgnoreBug> getTooOldIgnoreBugs(List<IgnoredTestDetails> ignoredTests, List<LineOfCommittedCode> linesOfCode) {
         if(linesOfCode.isEmpty()) { return Collections.emptyList(); }
         
-    	List<TooOldIgnoreBug> tooOldIgnores = new ArrayList<TooOldIgnoreBug>();
+    	return collectTooOldignores(ignoredTests, linesOfCode);
+	}
+
+
+    private List<TooOldIgnoreBug> collectTooOldignores(List<IgnoredTestDetails> ignoredTests, List<LineOfCommittedCode> linesOfCode) {
+        List<TooOldIgnoreBug> tooOldIgnores = new ArrayList<TooOldIgnoreBug>();
     	for(int i = 0; i < ignoredTests.size(); i++) {
     		IgnoredTestDetails ignoredTest = ignoredTests.get(i);
-    		LineOfCommittedCode firstLineInIgnoredMethod = linesOfCode.get(ignoredTest.lineNumber -1);
+    		LineOfCommittedCode firstLineInIgnoredMethod = linesOfCode.get(ignoredTest.lineNumber - 1);
     		
-    		for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
-    			LineOfCommittedCode readingBack = linesOfCode.get(j);
-    			if(readingBack.lineContents.contains("@Ignore")) {
-    			    if(readingBack.dateOfCommit.isBefore(tooOldIgnoreThresholdDate)) {
-    			        tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, 
-    				                                      ignoredTest.methodName, 
-    				                                      readingBack.lineNumber + 1));
-    			    }
-    				break;
-    			}
-    		}
+    		List<TooOldIgnoreBug> findLineOfIgnoreAnnotation = findLineOfIgnoreAnnotation(linesOfCode, ignoredTest, firstLineInIgnoredMethod);
+            tooOldIgnores.addAll(findLineOfIgnoreAnnotation);
     	}
-    	
-    	return tooOldIgnores;
-	}
+        return tooOldIgnores;
+    }
+
+
+    private List<TooOldIgnoreBug> findLineOfIgnoreAnnotation(List<LineOfCommittedCode> linesOfCode, IgnoredTestDetails ignoredTest, LineOfCommittedCode firstLineInIgnoredMethod) {
+        List<TooOldIgnoreBug> tooOldIgnores = new ArrayList<TooOldIgnoreBug>();
+        for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
+        	LineOfCommittedCode readingBack = linesOfCode.get(j);
+        	if(hasAnIgnoreWhichIsTooOld(readingBack)) {
+                tooOldIgnores.add(newBug(ignoredTest, readingBack));
+        	}
+        }
+        
+        return tooOldIgnores;
+    }
+
+
+    private TooOldIgnoreBug newBug(IgnoredTestDetails ignoredTest, LineOfCommittedCode readingBack) {
+        return new TooOldIgnoreBug(ignoredTest.fileName, ignoredTest.methodName, readingBack.lineNumber + 1);
+    }
+
+
+    private boolean hasAnIgnoreWhichIsTooOld(LineOfCommittedCode readingBack) {
+        return readingBack.lineContents.contains("@Ignore") && readingBack.dateOfCommit.isBefore(tooOldIgnoreThresholdDate);
+    }
 
     
     public static void main(String[] args) {
