@@ -10,6 +10,15 @@
 
 
 	<dependencies>
+		
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>1.6.2</version>
+		    <scope>compile</scope>
+		</dependency>
+
+		
 		<dependency>
 			<groupId>org.tmatesoft.svnkit</groupId>
 			<artifactId>svnkit</artifactId>

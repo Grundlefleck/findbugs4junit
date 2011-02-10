@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 
 import com.youdevise.fbplugins.junit.AgeOfIgnoreFinder;
@@ -16,18 +17,23 @@ import com.youdevise.fbplugins.junit.PluginProperties;
 import com.youdevise.fbplugins.junit.TooOldIgnoreBug;
 import com.youdevise.fbplugins.junit.VersionControlledSourceFileFinder;
 
-public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
+public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
 
 
     private final VersionControlledSourceFileFinder vcsFileFinder;
 	private final CommittedCodeDetailsFetcher committedCodeDetailsFetcher;
+    private final DateTime tooOldIgnoreThresholdDate;
 
-    public SvnAgeOfIgnoreFinder(VersionControlledSourceFileFinder vcsFileFinder, CommittedCodeDetailsFetcher committedCodeDetailsFetcher) {
+    public SvnAgeOfIgnoreChecker(VersionControlledSourceFileFinder vcsFileFinder, 
+                                 CommittedCodeDetailsFetcher committedCodeDetailsFetcher,
+                                 DateTime tooOldThresholdDate) {
         this.vcsFileFinder = vcsFileFinder;
 		this.committedCodeDetailsFetcher = committedCodeDetailsFetcher;
+        this.tooOldIgnoreThresholdDate = tooOldThresholdDate;
     }
 
-    @Override public List<TooOldIgnoreBug> ignoredForTooLong(String fullFilePath, List<IgnoredTestDetails> ignoredTests) {
+
+    public List<TooOldIgnoreBug> ignoredForTooLong(String fullFilePath, List<IgnoredTestDetails> ignoredTests) {
         String vcsFileLocation = vcsFileFinder.location(fullFilePath);
         List<LineOfCommittedCode> linesOfCode = committedCodeDetailsFetcher.logHistoryOfFile(vcsFileLocation);
 		return getTooOldIgnoreBugs(ignoredTests, linesOfCode);
@@ -44,9 +50,11 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
     		for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
     			LineOfCommittedCode readingBack = linesOfCode.get(j);
     			if(readingBack.lineContents.contains("@Ignore")) {
-    				tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, 
+    			    if(readingBack.dateOfCommit.isBefore(tooOldIgnoreThresholdDate)) {
+    			        tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, 
     				                                      ignoredTest.methodName, 
     				                                      readingBack.lineNumber + 1));
+    			    }
     				break;
     			}
     		}
@@ -66,7 +74,11 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
 																	 "/home/gallan/dev/workspaces/latest/HIP/",
 																	 "14");
 		
-		SvnAgeOfIgnoreFinder ignoreFinder = new SvnAgeOfIgnoreFinder(new VersionControlledSourceFileFinder(properties), new SvnCommittedCodeDetailsFetcher());
+		DateTime tooOldIgnoreThreshold = new DateTime().minusDays(14);
+		
+		SvnAgeOfIgnoreChecker ignoreFinder = new SvnAgeOfIgnoreChecker(new VersionControlledSourceFileFinder(properties),
+		                                                               new SvnCommittedCodeDetailsFetcher(), 
+		                                                               tooOldIgnoreThreshold);
 		List<IgnoredTestDetails> ignoredTest = asList(new IgnoredTestDetails(lineNumber, methodName, fullFileName));
         List<TooOldIgnoreBug> ignoredForTooLong = ignoreFinder.ignoredForTooLong(fullFileName, ignoredTest);
 		

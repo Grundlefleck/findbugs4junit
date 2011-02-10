@@ -8,6 +8,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionContaining.hasItem;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Test;
 
 public class PluginPropertiesTest {
@@ -65,9 +67,37 @@ public class PluginPropertiesTest {
 		assertThat(properties.areValid(), is(true));
 	}
 	
-//	@Test
-//    public void reportsAnErrorWhenTheIgnoreDurationIsMissing() throws Exception {
-//        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", null);
-//    }
+	@Test
+    public void reportsAnErrorWhenTheIgnoreDurationIsMissing() throws Exception {
+        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", null);
+        assertThat(properties.errors(), hasItem(TOO_OLD_THRESHOLD_ERROR));
+        assertThat(properties.areValid(), is(false));
+    }
+	
+	@Test
+    public void reportsAnErrorWhenTheIgnoreDurationIsBlank() throws Exception {
+        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", "");
+        assertThat(properties.errors(), hasItem(TOO_OLD_THRESHOLD_ERROR));
+        assertThat(properties.areValid(), is(false));
+    }
+	
+	@Test
+    public void reportsAnErrorWhenTheIgnoreDurationIsNotAnInteger() throws Exception {
+        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", "fourteen");
+        assertThat(properties.errors(), hasItem(TOO_OLD_THRESHOLD_ERROR));
+        assertThat(properties.areValid(), is(false));
+    }
+	
+	@Test
+    public void providesADateThatIsTheCurrentDateMinusTheNumberOfDaysSpecifiedByTooOldThreshold() throws Exception {
+        properties = PluginProperties.fromArguments("http://src/svn/trunk/MyProject", "/home/me/project", "3");
+        assertThat(properties.areValid(), is(true));
+        
+        DateTime propertiesDate = properties.tooOldThresholdDate();
+        
+        
+        DateTime currentDate = new DateTime();
+        assertThat(Days.daysBetween(propertiesDate, currentDate).getDays(), is(3));
+    }
 	
 }

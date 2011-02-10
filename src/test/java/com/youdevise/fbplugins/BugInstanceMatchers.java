@@ -40,7 +40,6 @@ public class BugInstanceMatchers {
             this.bugType = bugType;
         }
         
-        @Override
         public boolean matches(Object obj) {
             if(! (obj instanceof BugInstance)) {
                 return false;
@@ -50,7 +49,6 @@ public class BugInstanceMatchers {
             return bugType.equals(bug.getType());
         }
 
-        @Override
         public void describeTo(Description description) {
             description.appendText(format("with bug of type '%s'", bugType));
         }
