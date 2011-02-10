@@ -44,7 +44,9 @@ public class SvnAgeOfIgnoreFinder implements AgeOfIgnoreFinder {
     		for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
     			LineOfCommittedCode readingBack = linesOfCode.get(j);
     			if(readingBack.lineContents.contains("@Ignore")) {
-    				tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, readingBack.lineNumber + 1));
+    				tooOldIgnores.add(new TooOldIgnoreBug(ignoredTest.fileName, 
+    				                                      ignoredTest.methodName, 
+    				                                      readingBack.lineNumber + 1));
     				break;
     			}
     		}

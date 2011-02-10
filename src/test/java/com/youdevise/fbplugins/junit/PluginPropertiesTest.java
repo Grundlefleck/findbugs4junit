@@ -4,13 +4,11 @@ import static com.youdevise.fbplugins.junit.PluginProperties.PROJECT_BASE_DIR_NA
 import static com.youdevise.fbplugins.junit.PluginProperties.TOO_OLD_THRESHOLD_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_PROJECT_ROOT_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.fromArguments;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionContaining.hasItem;
 
 import org.junit.Test;
-
-import com.youdevise.fbplugins.junit.PluginProperties;
 
 public class PluginPropertiesTest {
 
