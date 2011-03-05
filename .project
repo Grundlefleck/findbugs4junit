@@ -1,7 +1,9 @@
 <projectDescription>
   <name>findbugs4junit</name>
   <comment/>
-  <projects/>
+  <projects>
+    <project>test-driven-detectors4findbugs</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

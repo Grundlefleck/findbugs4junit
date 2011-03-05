@@ -22,16 +22,17 @@
 */
 package com.youdevise.fbplugins.junit;
 
-import static com.youdevise.fbplugins.BugInstanceMatchers.hasType;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertAllBugsReported;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertBugReported;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertNoBugsReported;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.bugReporterForTesting;
+import static com.youdevise.fbplugins.tdd4fb.internal.FindBugsMatchers.ofType;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -41,19 +42,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-import org.mockito.verification.VerificationMode;
 
-import com.youdevise.fbplugins.DetectorRunner;
 import com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.NoIgnoredTests;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase;
 
-import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
-import edu.umd.cs.findbugs.ProjectStats;
 import edu.umd.cs.findbugs.ba.ClassContext;
-import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 
 public class JUnitTestIgnoredForTooLongTest {
 
@@ -66,14 +62,11 @@ public class JUnitTestIgnoredForTooLongTest {
     private Detector detectorToRegisterBugsAs;
 
     @Before public void setUp() {
-        bugReporter = mock(BugReporter.class);
+        bugReporter = bugReporterForTesting();
         ageOfIgnoreFinder = mock(AgeOfIgnoreFinder.class);
         sourcePathFinder = mock(FullSourcePathFinder.class);
         unitTestVisitor = mock(UnitTestVisitor.class);
         detectorToRegisterBugsAs = mock(Detector.class);
-        
-        ProjectStats projectStats = mock(ProjectStats.class);
-        when(bugReporter.getProjectStats()).thenReturn(projectStats);
     }
 
 	private void constructDetector() {
@@ -84,7 +77,7 @@ public class JUnitTestIgnoredForTooLongTest {
 	doesNotReportBugWhenClassHasNoIgnoredTestCases() throws Exception {
 		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(false);
 		constructDetector();
-		assertNoBugsReportedForClass(NoIgnoredTests.class); 
+		assertNoBugsReported(NoIgnoredTests.class, detector, bugReporter); 
 	}
 	
 	@Test public void
@@ -99,9 +92,10 @@ public class JUnitTestIgnoredForTooLongTest {
 		
 		constructDetector();
 		
-		assertBugReportedAgainstClass(OneIgnoredTestCase.class);
+		assertBugReported(OneIgnoredTestCase.class, detector, bugReporter);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test public void
 	reportsABugForEachOldIgnoreInATestFile() throws Exception {
 		String fileNameWithIgnore = "OneIgnoredTestCase.java";
@@ -114,7 +108,8 @@ public class JUnitTestIgnoredForTooLongTest {
 		
 		constructDetector();
 		
-		assertBugReportedAgainstClass(ManyIgnoredOneActive.class, times(2));
+		assertAllBugsReported(ManyIgnoredOneActive.class, detector, bugReporter, 
+				              ofType("JUNIT_IGNORED_TOO_LONG"), ofType("JUNIT_IGNORED_TOO_LONG"));
 	}
 
 	private List<TooOldIgnoreBug> oldIgnoreBugs(TooOldIgnoreBug... bugs) {
@@ -129,7 +124,7 @@ public class JUnitTestIgnoredForTooLongTest {
 		
 		constructDetector();
 		
-		assertNoBugsReportedForClass(ManyIgnoredOneActive.class);
+		assertNoBugsReported(ManyIgnoredOneActive.class, detector, bugReporter);
 	}
 	
 
@@ -143,7 +138,7 @@ public class JUnitTestIgnoredForTooLongTest {
 		
 		constructDetector();
 		
-		assertBugReportedAgainstClass(ManyIgnoredOneActive.class, times(1));
+		assertBugReported(ManyIgnoredOneActive.class, detector, bugReporter);
 	}
 	
 	private ArgumentMatcher<List<IgnoredTestDetails>> isIgnoredTestMethod(final String methodName) {
@@ -165,18 +160,4 @@ public class JUnitTestIgnoredForTooLongTest {
 		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
 	}
 
-    private void assertBugReportedAgainstClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
-        assertBugReportedAgainstClass(classToTest, times(1));
-    }
-    
-    private void assertNoBugsReportedForClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
-        DetectorRunner.runDetectorOnClass(detector, classToTest, bugReporter);
-        verify(bugReporter, never()).reportBug(any(BugInstance.class));
-    }
-    
-	private void assertBugReportedAgainstClass(Class<?> classToTest, VerificationMode times) throws CheckedAnalysisException, IOException, InterruptedException {
-		DetectorRunner.runDetectorOnClass(detector, classToTest, bugReporter);
-        verify(bugReporter, times).reportBug(argThat(hasType("JUNIT_IGNORED_TOO_LONG")));
-	}
-	
 }

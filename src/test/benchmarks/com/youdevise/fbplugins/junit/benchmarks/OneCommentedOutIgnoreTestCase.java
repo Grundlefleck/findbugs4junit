@@ -34,7 +34,7 @@ public class OneCommentedOutIgnoreTestCase {
 	 * This is a 'dead' @Ignore, which should not appear in the bytecode.
 	 */
 	@Test public void myIgnoredTest() throws Exception {
-		assertTrue(false);
+		assertTrue(true);
 	}
 	
 }
