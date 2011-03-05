@@ -8,17 +8,17 @@
   <classpathentry kind="var" path="M2_REPO/asm/asm/3.1/asm-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm-analysis/3.1/asm-analysis-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm-commons/3.1/asm-commons-3.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/asm/asm-debug-all/3.2/asm-debug-all-3.2.jar" sourcepath="M2_REPO/asm/asm-debug-all/3.2/asm-debug-all-3.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm-tree/3.1/asm-tree-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm-util/3.1/asm-util-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm-xml/3.1/asm-xml-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/bcel/1.3.8/bcel-1.3.8.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/graham/.m2/repository/commons-lang/commons-lang/2.4/commons-lang-2.4-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/gallan/.m2/repository/commons-lang/commons-lang/2.4/commons-lang-2.4-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" sourcepath="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"/>
+<<<<<<< HEAD
   <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/findbugs/1.3.9/findbugs-1.3.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.2/hamcrest-core-1.2-sources.jar">
     <attributes>
@@ -30,20 +30,35 @@
   <classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar" sourcepath="M2_REPO/jdom/jdom/1.0/jdom-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jFormatString/1.3.8/jFormatString-1.3.8.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jsr305/1.3.8/jsr305-1.3.8.jar"/>
+=======
+  <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/findbugs/1.3.7/findbugs-1.3.7.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jaxen/jaxen/1.1.1/jaxen-1.1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar" sourcepath="M2_REPO/jdom/jdom/1.0/jdom-1.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jFormatString/1.3.7/jFormatString-1.3.7.jar"/>
+  <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6.2/joda-time-1.6.2.jar" sourcepath="M2_REPO/joda-time/joda-time/1.6.2/joda-time-1.6.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/gallan/.m2/repository/joda-time/joda-time/1.6.2/joda-time-1.6.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jsr305/1.3.7/jsr305-1.3.7.jar"/>
+>>>>>>> 6838c8e0eebaac555563452da27c6f299707ea9f
   <classpathentry kind="var" path="M2_REPO/junit/junit-dep/4.8.2/junit-dep-4.8.2.jar" sourcepath="M2_REPO/junit/junit-dep/4.8.2/junit-dep-4.8.2-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/graham/.m2/repository/junit/junit-dep/4.8.2/junit-dep-4.8.2-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/gallan/.m2/repository/junit/junit-dep/4.8.2/junit-dep-4.8.2-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-core/1.8.4/mockito-core-1.8.4.jar" sourcepath="M2_REPO/org/mockito/mockito-core/1.8.4/mockito-core-1.8.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0.jar" sourcepath="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/graham/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/gallan/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/tmatesoft/svnkit/svnkit/1.3.1/svnkit-1.3.1.jar" sourcepath="M2_REPO/org/tmatesoft/svnkit/svnkit/1.3.1/svnkit-1.3.1-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/graham/.m2/repository/org/tmatesoft/svnkit/svnkit/1.3.1/svnkit-1.3.1-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/home/gallan/.m2/repository/org/tmatesoft/svnkit/svnkit/1.3.1/svnkit-1.3.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="src" path="/test-driven-detectors4findbugs"/>

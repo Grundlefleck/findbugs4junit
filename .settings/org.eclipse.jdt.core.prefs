@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #Sat Mar 05 18:14:10 GMT 2011
+=======
+#Thu Feb 10 12:25:22 GMT 2011
+>>>>>>> 6838c8e0eebaac555563452da27c6f299707ea9f
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.source=1.6

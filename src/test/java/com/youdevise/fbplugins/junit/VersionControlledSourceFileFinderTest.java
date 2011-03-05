@@ -5,9 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.youdevise.fbplugins.junit.PluginProperties;
-import com.youdevise.fbplugins.junit.VersionControlledSourceFileFinder;
-
 public class VersionControlledSourceFileFinderTest {
     @Test public void
     usesFullFilePathAndVersionControlPropertiesToCreateAnHttpLocationOfSourceFile() throws Exception {

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
@@ -18,7 +19,7 @@ import com.youdevise.fbplugins.junit.LineOfCommittedCode;
 
 public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetcher {
 
-	@Override public List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile) {
+	public List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile) {
 		try {
             SVNURL fileURL = SVNURL.parseURIEncoded(httpLocationOfVersionControlledSourceFile);
 
@@ -29,10 +30,6 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
             AnnotationHandler handler = new AnnotationHandler();
 			logClient.doAnnotate(fileURL, SVNRevision.UNDEFINED, SVNRevision.create(1), SVNRevision.HEAD, 
 			                     ignoreMimeType, includeMergedRevisions, handler, null);
-            
-			for (LineOfCommittedCode line : handler.lines()) {
-			    System.out.println(line);
-            }
 			
 			return handler.lines();
             
@@ -47,19 +44,18 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
 
     	private List<LineOfCommittedCode> lines = new ArrayList<LineOfCommittedCode>();
     	
-        @Override
         public void handleLine(Date date, long revision, String author, String line, Date mergedDate, long mergedRevision,
                 String mergedAuthor, String mergedPath, int lineNumber) throws SVNException {
-            lines.add(new LineOfCommittedCode(date, revision, author, line, lineNumber));
+            lines.add(new LineOfCommittedCode(new DateTime(date), revision, author, line, lineNumber));
         }
 
         public List<LineOfCommittedCode> lines() { return Collections.unmodifiableList(lines); }
         
-		@Override public void handleEOF() { }
+		public void handleEOF() { }
 
-		@Override public void handleLine(Date date, long revision, String author, String line) throws SVNException { }
+		public void handleLine(Date date, long revision, String author, String line) throws SVNException { }
 
-		@Override public boolean handleRevision(Date date, long revision, String author, File contents) throws SVNException { return false; }
+		public boolean handleRevision(Date date, long revision, String author, File contents) throws SVNException { return false; }
 
     }
 }

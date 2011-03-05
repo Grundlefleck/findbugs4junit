@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 public class PluginProperties {
 	private static final String propertyPrefix = "";
 	
@@ -95,6 +97,10 @@ public class PluginProperties {
 
 	public boolean areValid() {
         return errors.isEmpty();
+    }
+
+    public DateTime tooOldThresholdDate() {
+        return new DateTime().minusDays(tooOldThreshold);
     }
 
 }

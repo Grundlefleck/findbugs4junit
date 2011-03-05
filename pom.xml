@@ -10,13 +10,15 @@
 
 
 	<dependencies>
+		
 		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-debug-all</artifactId>
-			<version>3.2</version>
-			<scope>compile</scope>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>1.6.2</version>
+		    <scope>compile</scope>
 		</dependency>
 
+		
 		<dependency>
 			<groupId>org.tmatesoft.svnkit</groupId>
 			<artifactId>svnkit</artifactId>
@@ -51,6 +53,7 @@
 			<version>4.8.2</version>
 		</dependency>
 		
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
@@ -65,6 +68,8 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/test/test-driven-detectors4findbugs-0.1.jar</systemPath>
 		</dependency>
+=======
+>>>>>>> 6838c8e0eebaac555563452da27c6f299707ea9f
 		
 	</dependencies>
 

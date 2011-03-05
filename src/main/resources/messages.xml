@@ -51,7 +51,7 @@ if ( the test passes ) {
 </Details>
   </BugPattern>
 
-  <BugCode abbrev="JUnit">Ignored A JUnit Test For Too Long</BugCode>
+  <BugCode abbrev="JUNIT">Ignored A JUnit Test For Too Long</BugCode>
   
 </MessageCollection>
 

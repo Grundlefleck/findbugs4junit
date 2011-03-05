@@ -25,12 +25,12 @@ package com.youdevise.fbplugins.junit;
 
 import java.io.IOException;
 
-import edu.umd.cs.findbugs.BugAnnotation;
+import org.apache.bcel.classfile.Method;
+
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
 import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.ClassContext;
 
 public class JUnitTestIgnoredForTooLong implements Detector {
@@ -69,21 +69,26 @@ public class JUnitTestIgnoredForTooLong implements Detector {
 	}
 	
     private void doReportBug(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
-        String slashedClassName = classContext.getClassDescriptor().getClassName();
-        BugAnnotation annotation = SourceLineAnnotation.fromRawData(slashedClassName, tooOldIgnore.sourceFileName(), 
-        															tooOldIgnore.lineNumber(), tooOldIgnore.lineNumber(),
-        															0, 0);
+        Method testMethod = getMethodFrom(classContext, tooOldIgnore);
         BugInstance bug = new BugInstance(pluginToRegisterBugsWith, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT)
-                                            .addClass(classContext.getJavaClass())
-                                            .add(annotation);
+                                            .addClassAndMethod(classContext.getJavaClass(), testMethod);
         bugReporter.reportBug(bug);
 	}
 	
+    private Method getMethodFrom(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
+        for (Method method : classContext.getMethodsInCallOrder()) {
+            if(method.getName().equalsIgnoreCase(tooOldIgnore.methodName())) {
+                return method;
+            }
+        }
+        return null;
+    }
+
     private void logError(String message, Exception e) {
         System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s%n", message, e);
     }
 
-	@Override public void report() { }
+	public void report() { }
 
     
 	

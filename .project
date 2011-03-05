@@ -1,9 +1,14 @@
 <projectDescription>
   <name>findbugs4junit</name>
+<<<<<<< HEAD
   <comment/>
   <projects>
     <project>test-driven-detectors4findbugs</project>
   </projects>
+=======
+  <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects/>
+>>>>>>> 6838c8e0eebaac555563452da27c6f299707ea9f
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

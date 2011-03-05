@@ -33,13 +33,13 @@ public class ManyIgnoredOneActive {
 	@Ignore
 	@Test public void
 	myIgnoredTest() {
-		assertTrue(false);
+		assertTrue(true);
 	}
 	
 	@Ignore
 	@Test public void
 	mySecondIgnoredTest() {
-		assertTrue(false);
+		assertTrue(true);
 	}
 	
 	
