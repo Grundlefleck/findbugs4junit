@@ -26,7 +26,7 @@ import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertAllBugsReporte
 import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertBugReported;
 import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.assertNoBugsReported;
 import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.bugReporterForTesting;
-import static com.youdevise.fbplugins.tdd4fb.internal.FindBugsMatchers.ofType;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.ofType;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
