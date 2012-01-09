@@ -51,6 +51,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
 			<version>4.8.2</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
@@ -120,6 +121,13 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<artifactSet>
+				               <includes>
+				                 <include>joda-time</include>
+				                 <include>org.tmatesoft.svnkit</include>
+				               </includes>
+				             </artifactSet>
+						
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
