@@ -6,7 +6,7 @@ import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_PRO
 import static com.youdevise.fbplugins.junit.PluginProperties.fromArguments;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;

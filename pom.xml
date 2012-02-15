@@ -53,23 +53,27 @@
 			<version>4.8.2</version>
 		</dependency>
 		
-<<<<<<< HEAD
+
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
-			<version>1.2</version>
-			<scope>test</scope>
+			<version>1.3.RC2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.3.RC2</version>
+		</dependency>
+            
 		
 		<dependency>
 			<groupId>com.youdevise</groupId>
 			<artifactId>test-driven-detectors4findbugs</artifactId>
-			<version>0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/test/test-driven-detectors4findbugs-0.1.jar</systemPath>
+			<version>0.2</version>
+			<scope>test</scope>
 		</dependency>
-=======
->>>>>>> 6838c8e0eebaac555563452da27c6f299707ea9f
+
+
 		
 	</dependencies>
 

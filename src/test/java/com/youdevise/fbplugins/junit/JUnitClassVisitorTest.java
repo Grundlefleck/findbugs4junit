@@ -23,7 +23,7 @@
 
 package com.youdevise.fbplugins.junit;
 
-import static org.hamcrest.collection.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
