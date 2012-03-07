@@ -3,6 +3,8 @@ package com.youdevise.fbplugins.junit.impl;
 import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,13 +25,16 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
     private final VersionControlledSourceFileFinder vcsFileFinder;
 	private final CommittedCodeDetailsFetcher committedCodeDetailsFetcher;
     private final DateTime tooOldIgnoreThresholdDate;
+    private final Collection<String> annotationsToLookFor;
 
-    public SvnAgeOfIgnoreChecker(VersionControlledSourceFileFinder vcsFileFinder, 
-                                 CommittedCodeDetailsFetcher committedCodeDetailsFetcher,
-                                 DateTime tooOldThresholdDate) {
+    public SvnAgeOfIgnoreChecker(VersionControlledSourceFileFinder vcsFileFinder,
+                                 CommittedCodeDetailsFetcher committedCodeDetailsFetcher, 
+                                 DateTime tooOldThresholdDate, 
+                                 Collection<String> annotationsToLookFor) {
         this.vcsFileFinder = vcsFileFinder;
-		this.committedCodeDetailsFetcher = committedCodeDetailsFetcher;
+        this.committedCodeDetailsFetcher = committedCodeDetailsFetcher;
         this.tooOldIgnoreThresholdDate = tooOldThresholdDate;
+        this.annotationsToLookFor = annotationsToLookFor;
     }
 
 
@@ -63,7 +68,7 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
         List<TooOldIgnoreBug> tooOldIgnores = new ArrayList<TooOldIgnoreBug>();
         for(int j = linesOfCode.indexOf(firstLineInIgnoredMethod); j > 0; j--) {
         	LineOfCommittedCode readingBack = linesOfCode.get(j);
-        	if(hasAnIgnoreWhichIsTooOld(readingBack)) {
+        	if(hasAnAnnotationToLookForWhichIsTooOld(readingBack)) {
                 tooOldIgnores.add(newBug(ignoredTest, readingBack));
         	}
         }
@@ -77,26 +82,42 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
     }
 
 
-    private boolean hasAnIgnoreWhichIsTooOld(LineOfCommittedCode readingBack) {
-        return readingBack.lineContents.contains("@Ignore") && readingBack.dateOfCommit.isBefore(tooOldIgnoreThresholdDate);
+    private boolean hasAnAnnotationToLookForWhichIsTooOld(LineOfCommittedCode readingBack) {
+        return lineContainsAnnotationToLookFor(readingBack) && readingBack.dateOfCommit.isBefore(tooOldIgnoreThresholdDate);
+    }
+
+
+    private boolean lineContainsAnnotationToLookFor(LineOfCommittedCode readingBack) {
+        for (String annotationName : annotationsToLookFor) {
+            String simpleNameAnnotation = annotationName.substring(annotationName.lastIndexOf(".") + 1);
+            String fullyQualifiedNameAnnotation = annotationName;
+            if (readingBack.lineContents.contains("@".concat(simpleNameAnnotation))
+                || readingBack.lineContents.contains("@".concat(fullyQualifiedNameAnnotation))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     
     public static void main(String[] args) {
     	DAVRepositoryFactory.setup();
-		String fullFileName = "/home/gallan/dev/workspaces/latest/HIP/browsertest/com/youdevise/seleniumrc/tests/LoginAsAndRevertToAdmin.java";
-		Integer lineNumber = 98;
-		String methodName = "cannotLoginAsUserWithAnUnescapedBackslash";
+		String fullFileName = "/home/gallan/dev/workspaces/latest/HIP/integration-test/src/main/java/com/youdevise/hip/liquidity/LiquidityIntegrationTest.java";
+		Integer lineNumber = 576;
+		String methodName = "the_gating_basis_of_a_lot_is_honoured";
 		
-		PluginProperties properties = PluginProperties.fromArguments("http://srcctrl/opt/repo/projects/HIP/trunk/", 
+		String annotationsToLookFor = "net.ttsui.junit.rules.pending.PendingImplementation";
+        PluginProperties properties = PluginProperties.fromArguments("http://srcctrl/opt/repo/projects/HIP/trunk/", 
 																	 "/home/gallan/dev/workspaces/latest/HIP/",
-																	 "14");
+																	 "14",
+																	 annotationsToLookFor);
 		
 		DateTime tooOldIgnoreThreshold = new DateTime().minusDays(14);
 		
 		SvnAgeOfIgnoreChecker ignoreFinder = new SvnAgeOfIgnoreChecker(new VersionControlledSourceFileFinder(properties),
 		                                                               new SvnCommittedCodeDetailsFetcher(), 
-		                                                               tooOldIgnoreThreshold);
+		                                                               tooOldIgnoreThreshold,
+		                                                               Arrays.asList(annotationsToLookFor));
 		List<IgnoredTestDetails> ignoredTest = asList(new IgnoredTestDetails(lineNumber, methodName, fullFileName));
         List<TooOldIgnoreBug> ignoredForTooLong = ignoreFinder.ignoredForTooLong(fullFileName, ignoredTest);
 		

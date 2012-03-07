@@ -79,5 +79,11 @@ public class IgnoredTestDetails {
 		return true;
 	}
 
+    @Override
+    public String toString() {
+        return "IgnoredTestDetails [lineNumber=" + lineNumber + ", methodName=" + methodName + ", fileName=" + fileName + "]";
+    }
+
+	
 	
 }

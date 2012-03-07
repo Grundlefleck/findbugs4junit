@@ -22,8 +22,14 @@
 */
 package com.youdevise.fbplugins.junit.impl;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
@@ -38,9 +44,24 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	
 	private boolean classContainsIgnore = false;
 	private String sourceFileName;
-	private ArrayList<IgnoredTestDetails> ignoredTests = new ArrayList<IgnoredTestDetails>();
+	private List<IgnoredTestDetails> ignoredTests = new ArrayList<IgnoredTestDetails>();
+    private Set<String> annotationsToScanFor;
 
-	public boolean classContainsIgnoredTests() {
+	public JUnitTestVisitor(Collection<String> annotationsToScanFor) {
+        this.annotationsToScanFor = unmodifiableSet(new HashSet<String>(annotationsToScanFor));
+    }
+	
+	public static JUnitTestVisitor lookingForIgnoreOnly() {
+	    return new JUnitTestVisitor(asList("org.junit.Ignore"));
+	}
+	
+    public static JUnitTestVisitor lookingForIgnoreAnd(Collection<String> annotationsToScanFor) {
+        Collection<String> includeIgnore = new HashSet<String>(annotationsToScanFor);
+        includeIgnore.add("org.junit.Ignore");
+        return new JUnitTestVisitor(includeIgnore);
+    }
+
+    public boolean classContainsIgnoredTests() {
 		return classContainsIgnore;
 	}
 
@@ -54,10 +75,19 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	@Override public void visitInnerClass(String name, String outerName, String innerName, int access) { }
 
 	@Override public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		return new JUnitTestMethodVisitor(name);
+		return new JUnitTestMethodVisitor(name, convertAnnotationsToInternalName());
 	}
 
-	@Override public void visitOuterClass(String owner, String name, String desc) { }
+	private Set<String> convertAnnotationsToInternalName() {
+	    Set<String> internalNames = new HashSet<String>(annotationsToScanFor.size());
+	    for (String dottedAnnotationTypeName : annotationsToScanFor) {
+	        String internalName = "L".concat(dottedAnnotationTypeName.replace(".", "/")).concat(";");
+            internalNames.add(internalName);
+        }
+	    return internalNames;
+    }
+
+    @Override public void visitOuterClass(String owner, String name, String desc) { }
 
 	@Override public void visitSource(String source, String debug) { 
 		this.sourceFileName = source;
@@ -70,13 +100,15 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 		private final String methodName;
 		private int currentLineNumber;
 		private boolean methodAnnotatedWithIgnore;
+        private final Set<String> annotationsToLookFor;
 
-		public JUnitTestMethodVisitor(String methodName) {
+		public JUnitTestMethodVisitor(String methodName, Set<String> annotationsToLookFor) {
 			this.methodName = methodName;
+            this.annotationsToLookFor = annotationsToLookFor;
 		}
 
 		@Override public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-			if("Lorg/junit/Ignore;".equals(desc)) {
+			if(annotationsToLookFor.contains(desc)) {
 				classContainsIgnore = true;
 				methodAnnotatedWithIgnore = true;
 			}
@@ -96,4 +128,5 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	public List<IgnoredTestDetails> detailsOfIgnoredTests() {
 		return ignoredTests;
 	}
+
 }

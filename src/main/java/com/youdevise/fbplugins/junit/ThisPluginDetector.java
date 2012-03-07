@@ -42,14 +42,13 @@ public class ThisPluginDetector implements Detector {
 	    }
 	}
     
-	
-    
     private static final String loggingLabel = JUnitTestIgnoredForTooLong.class.getSimpleName();
 
 	static {
         System.out.printf("Registered plugin detector [%s]%n", loggingLabel);
         properties = SetupChecker.SINGLETON_INSTANCE.initialiseProperties();
     }
+	
 	private final BugReporter bugReporter;
     private static PluginProperties properties;
 
@@ -61,7 +60,10 @@ public class ThisPluginDetector implements Detector {
         VersionControlledSourceFileFinder vcsFileFinder = new VersionControlledSourceFileFinder(properties);
         CommittedCodeDetailsFetcher committedCodeDetailsFetcher = new SvnCommittedCodeDetailsFetcher();
         DateTime tooOldThresholdDate = properties.tooOldThresholdDate();
-		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate);
+		AgeOfIgnoreFinder ageOfIgnoreFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, 
+		                                                                committedCodeDetailsFetcher, 
+		                                                                tooOldThresholdDate, 
+		                                                                properties.annotationsToLookFor());
 		FullSourcePathFinder fullSourcePathFinder = new FBFullSourcePathFinder();
 		UnitTestVisitor unitTestVisitor = analyseClassToDiscoverIgnoredTestCases(classContext);
 		return new JUnitTestIgnoredForTooLong(this, bugReporter, ageOfIgnoreFinder, fullSourcePathFinder, unitTestVisitor);
@@ -79,7 +81,7 @@ public class ThisPluginDetector implements Detector {
         ClassDescriptor classDescriptor = classContext.getClassDescriptor();
         
         FBClassReader reader;
-        JUnitTestVisitor ignoredTestCasesFinder = new JUnitTestVisitor();
+        JUnitTestVisitor ignoredTestCasesFinder = JUnitTestVisitor.lookingForIgnoreOnly();
         try {
             reader = Global.getAnalysisCache().getClassAnalysis(FBClassReader.class, classDescriptor);
         } catch (CheckedAnalysisException e) {

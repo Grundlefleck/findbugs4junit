@@ -23,9 +23,10 @@
 
 package com.youdevise.fbplugins.junit;
 
-import static org.hamcrest.collection.IsCollectionContaining.hasItem;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -38,6 +39,10 @@ import com.youdevise.fbplugins.junit.benchmarks.ManyIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.OneCommentedOutIgnoreTestCase;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredOneActive;
 import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTestCase;
+import com.youdevise.fbplugins.junit.benchmarks.OneIgnoredTheoryTestCase;
+import com.youdevise.fbplugins.junit.benchmarks.OneNonTestMethodWithCustomAnnotationToLookFor;
+import com.youdevise.fbplugins.junit.benchmarks.OneTestWithCustomAnnotationToLookFor;
+import com.youdevise.fbplugins.junit.benchmarks.OneWithIgnoreOneCustomAnnotation;
 import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 
 public class JUnitClassVisitorTest {
@@ -59,6 +64,16 @@ public class JUnitClassVisitorTest {
 		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(35, "myIgnoredTest", "OneIgnoredOneActive.java")));
 
 	}
+
+	@Test public void
+	reportsDetailsOfIgnoredTheoryTests() throws Exception {
+	    UnitTestVisitor visitor = runDetector(OneIgnoredTheoryTestCase.class);
+	    
+	    List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+	    assertThat(detailsOfIgnoredTests.size(), is(1));
+	    assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(18, "ignoredTheory", "OneIgnoredTheoryTestCase.java")));
+	    
+	}
 	
 	@Test public void
 	reportsOnManyIgnoredTests() throws Exception {
@@ -77,12 +92,51 @@ public class JUnitClassVisitorTest {
 		
 		assertThat(detailsOfIgnoredTests.size(), is(0));
 	}
+	
+	@Test public void 
+	reportsOnTestsWithCustomAnnotationOnTest() throws Exception {
+	    List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
+	    JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+	    UnitTestVisitor visitor = runDetector(OneTestWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+        
+        assertThat(detailsOfIgnoredTests.size(), is(1));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(11, "withCustomAnnotation", "OneTestWithCustomAnnotationToLookFor.java")));
+    }
 
-	
-	
-	private UnitTestVisitor runDetector(Class<?> toVisit) {
-		JUnitTestVisitor visitor = new JUnitTestVisitor();
-		ClassReader cr;
+    @Test public void 
+    reportsOnTestsWithCustomAnnotationToLookForEvenIfAnnotationIsNotAppliedToAJUnitTestMethod() throws Exception {
+        List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
+        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+        
+        UnitTestVisitor visitor = runDetector(OneNonTestMethodWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+        
+        assertThat(detailsOfIgnoredTests.size(), is(1));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(9, "withCustomAnnotation", "OneNonTestMethodWithCustomAnnotationToLookFor.java")));
+    }
+    
+    @Test public void 
+    reportsOnTestsWithIgnoreOrCustomAnnotation() throws Exception {
+        List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
+        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+        
+        UnitTestVisitor visitor = runDetector(OneWithIgnoreOneCustomAnnotation.class, visitorWhichAlsoLooksForCustomAnnotations);
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+        
+        assertThat(detailsOfIgnoredTests.size(), is(2));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(12, "withCustomAnnotation", "OneWithIgnoreOneCustomAnnotation.java")));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(18, "withIgnore", "OneWithIgnoreOneCustomAnnotation.java")));
+    }
+
+
+    private UnitTestVisitor runDetector(Class<?> toVisit) {
+		return runDetector(toVisit, JUnitTestVisitor.lookingForIgnoreOnly());
+	}
+
+
+    private UnitTestVisitor runDetector(Class<?> toVisit, JUnitTestVisitor visitor) {
+        ClassReader cr;
 		try {
 			cr = new ClassReader(toVisit.getName());
 		} catch (IOException e) {
@@ -90,6 +144,6 @@ public class JUnitClassVisitorTest {
 		}
 		cr.accept(visitor, 0);
 		return visitor;
-	}
+    }
 	
 }
