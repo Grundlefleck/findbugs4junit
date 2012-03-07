@@ -60,6 +60,7 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
     		List<TooOldIgnoreBug> findLineOfIgnoreAnnotation = findLineOfIgnoreAnnotation(linesOfCode, ignoredTest, firstLineInIgnoredMethod);
             tooOldIgnores.addAll(findLineOfIgnoreAnnotation);
     	}
+    	
         return tooOldIgnores;
     }
 
@@ -102,9 +103,9 @@ public class SvnAgeOfIgnoreChecker implements AgeOfIgnoreFinder {
     
     public static void main(String[] args) {
     	DAVRepositoryFactory.setup();
-		String fullFileName = "/home/gallan/dev/workspaces/latest/HIP/integration-test/src/main/java/com/youdevise/hip/liquidity/LiquidityIntegrationTest.java";
-		Integer lineNumber = 576;
-		String methodName = "the_gating_basis_of_a_lot_is_honoured";
+		String fullFileName = "/home/gallan/dev/workspaces/latest/HIP/src/browsertest/java/com/youdevise/hip/performance/FohfPerformanceDetailPositionsTest.java";
+		Integer lineNumber = 169;
+		String methodName = "looking_through_hedge_fund_assets_in_published_mode_additionally_shows_trades_effective_before_period_but_modified_after_NAV_was_created";
 		
 		String annotationsToLookFor = "net.ttsui.junit.rules.pending.PendingImplementation";
         PluginProperties properties = PluginProperties.fromArguments("http://srcctrl/opt/repo/projects/HIP/trunk/", 

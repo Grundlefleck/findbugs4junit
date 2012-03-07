@@ -22,7 +22,6 @@
 */
 package com.youdevise.fbplugins.junit.impl;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 
 import java.util.ArrayList;
@@ -50,16 +49,6 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	public JUnitTestVisitor(Collection<String> annotationsToScanFor) {
         this.annotationsToScanFor = unmodifiableSet(new HashSet<String>(annotationsToScanFor));
     }
-	
-	public static JUnitTestVisitor lookingForIgnoreOnly() {
-	    return new JUnitTestVisitor(asList("org.junit.Ignore"));
-	}
-	
-    public static JUnitTestVisitor lookingForIgnoreAnd(Collection<String> annotationsToScanFor) {
-        Collection<String> includeIgnore = new HashSet<String>(annotationsToScanFor);
-        includeIgnore.add("org.junit.Ignore");
-        return new JUnitTestVisitor(includeIgnore);
-    }
 
     public boolean classContainsIgnoredTests() {
 		return classContainsIgnore;
@@ -81,7 +70,7 @@ public class JUnitTestVisitor extends EmptyVisitor implements UnitTestVisitor {
 	private Set<String> convertAnnotationsToInternalName() {
 	    Set<String> internalNames = new HashSet<String>(annotationsToScanFor.size());
 	    for (String dottedAnnotationTypeName : annotationsToScanFor) {
-	        String internalName = "L".concat(dottedAnnotationTypeName.replace(".", "/")).concat(";");
+	        String internalName = "L" + dottedAnnotationTypeName.replace(".", "/") + ";";
             internalNames.add(internalName);
         }
 	    return internalNames;

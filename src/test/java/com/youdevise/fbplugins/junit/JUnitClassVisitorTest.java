@@ -30,6 +30,7 @@ import static org.hamcrest.collection.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -48,7 +49,9 @@ import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 public class JUnitClassVisitorTest {
 
 	
-	@Test public void
+	private List<String> scanForIgnoreAndCustomAnnotation = asList("org.junit.Ignore", "com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");;
+
+    @Test public void
 	hasFoundIgnore() throws Exception {
 		UnitTestVisitor visitor = runDetector(OneIgnoredTestCase.class);
 		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
@@ -95,8 +98,7 @@ public class JUnitClassVisitorTest {
 	
 	@Test public void 
 	reportsOnTestsWithCustomAnnotationOnTest() throws Exception {
-	    List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
-	    JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+	    JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = new JUnitTestVisitor(scanForIgnoreAndCustomAnnotation);
 	    UnitTestVisitor visitor = runDetector(OneTestWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
         List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
         
@@ -106,8 +108,7 @@ public class JUnitClassVisitorTest {
 
     @Test public void 
     reportsOnTestsWithCustomAnnotationToLookForEvenIfAnnotationIsNotAppliedToAJUnitTestMethod() throws Exception {
-        List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
-        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = new JUnitTestVisitor(scanForIgnoreAndCustomAnnotation);
         
         UnitTestVisitor visitor = runDetector(OneNonTestMethodWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
         List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
@@ -118,8 +119,7 @@ public class JUnitClassVisitorTest {
     
     @Test public void 
     reportsOnTestsWithIgnoreOrCustomAnnotation() throws Exception {
-        List<String> annotationsToScanFor = asList("com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");
-        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = JUnitTestVisitor.lookingForIgnoreAnd(annotationsToScanFor);
+        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = new JUnitTestVisitor(scanForIgnoreAndCustomAnnotation);
         
         UnitTestVisitor visitor = runDetector(OneWithIgnoreOneCustomAnnotation.class, visitorWhichAlsoLooksForCustomAnnotations);
         List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
@@ -131,7 +131,7 @@ public class JUnitClassVisitorTest {
 
 
     private UnitTestVisitor runDetector(Class<?> toVisit) {
-		return runDetector(toVisit, JUnitTestVisitor.lookingForIgnoreOnly());
+		return runDetector(toVisit, new JUnitTestVisitor(Arrays.asList("org.junit.Ignore")));
 	}
 
 

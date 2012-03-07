@@ -81,7 +81,7 @@ public class ThisPluginDetector implements Detector {
         ClassDescriptor classDescriptor = classContext.getClassDescriptor();
         
         FBClassReader reader;
-        JUnitTestVisitor ignoredTestCasesFinder = JUnitTestVisitor.lookingForIgnoreOnly();
+        JUnitTestVisitor ignoredTestCasesFinder = new JUnitTestVisitor(properties.annotationsToLookFor());
         try {
             reader = Global.getAnalysisCache().getClassAnalysis(FBClassReader.class, classDescriptor);
         } catch (CheckedAnalysisException e) {
