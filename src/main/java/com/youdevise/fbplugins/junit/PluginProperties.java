@@ -1,7 +1,6 @@
 package com.youdevise.fbplugins.junit;
 
 import static java.lang.Integer.parseInt;
-import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
@@ -68,17 +67,18 @@ public class PluginProperties {
 		}
 		
 		Collection<String> annotations = new ArrayList<String>();
-		annotations.add("org.junit.Ignore");
 		if(!isBlank(annotationsToLookFor)) {
-		    String[] otherAnnotations = annotationsToLookFor.split(":");
-		    annotations.addAll(asList(otherAnnotations));
+		    for (String otherAnnotation : annotationsToLookFor.split(":")) {
+		        annotations.add(otherAnnotation);
+		    }
 		}
+		annotations.add("org.junit.Ignore");
 		
 		return new PluginProperties(unmodifiableList(errors), 
 		                            versionControlProjectRoot, 
 		                            projectBaseDirName, 
 		                            parseInt(tooOldThreshold),
-		                            Collections.unmodifiableCollection(annotations));
+		                            annotations);
 	}
 
 	private static boolean isNumber(String tooOldThreshold) {
@@ -94,12 +94,12 @@ public class PluginProperties {
 		return property == null || property.isEmpty();
 	}
 	
-	public PluginProperties(List<String> errors, String versionControlProjectRoot, String projectBaseDirName, int tooOldThreshold, Collection<String> annotationsToLookFor) {
+	private PluginProperties(List<String> errors, String versionControlProjectRoot, String projectBaseDirName, int tooOldThreshold, Collection<String> annotationsToLookFor) {
 		this.errors = errors;
 		this.versionControlProjectRoot = versionControlProjectRoot;
 		this.projectBaseDirName = projectBaseDirName;
         this.tooOldThreshold = tooOldThreshold;
-        this.annotationsToLookFor = annotationsToLookFor;
+        this.annotationsToLookFor = Collections.unmodifiableCollection(annotationsToLookFor);
 	}
 
 

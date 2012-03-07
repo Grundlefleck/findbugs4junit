@@ -145,5 +145,5 @@ public class JUnitClassVisitorTest {
 		cr.accept(visitor, 0);
 		return visitor;
     }
-	
+    
 }
