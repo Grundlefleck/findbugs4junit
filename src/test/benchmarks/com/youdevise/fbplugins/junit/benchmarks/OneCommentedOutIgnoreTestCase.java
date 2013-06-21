@@ -29,12 +29,12 @@ import org.junit.Test;
 
 public class OneCommentedOutIgnoreTestCase {
 
-	//@Ignore
-	/**
-	 * This is a 'dead' @Ignore, which should not appear in the bytecode.
-	 */
-	@Test public void myIgnoredTest() throws Exception {
-		assertTrue(true);
-	}
-	
+    //@Ignore
+    /**
+     * This is a 'dead' @Ignore, which should not appear in the bytecode.
+     */
+    @Test public void myIgnoredTest() throws Exception {
+        assertTrue(true);
+    }
+    
 }

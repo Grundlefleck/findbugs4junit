@@ -28,9 +28,9 @@ import org.junit.Test;
 
 public class NoIgnoredTests {
 
-	@Test public void
-	notIgnored() {
-		assertTrue(true); 
-	}
-	
+    @Test public void
+    notIgnored() {
+        assertTrue(true); 
+    }
+    
 }

@@ -49,57 +49,57 @@ import com.youdevise.fbplugins.junit.impl.JUnitTestVisitor;
 public class JUnitClassVisitorTest {
 
 
-	private List<String> scanForIgnoreAndCustomAnnotation = asList("org.junit.Ignore", "com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");;
+    private List<String> scanForIgnoreAndCustomAnnotation = asList("org.junit.Ignore", "com.youdevise.fbplugins.junit.benchmarks.MyCustomAnnotation");;
 
     @Test public void
-	hasFoundIgnore() throws Exception {
-		UnitTestVisitor visitor = runDetector(OneIgnoredTestCase.class);
-		assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
-	}
+    hasFoundIgnore() throws Exception {
+        UnitTestVisitor visitor = runDetector(OneIgnoredTestCase.class);
+        assertTrue("Should have found @Ignore'd test.", visitor.classContainsIgnoredTests());
+    }
 
 
-	@Test public void
-	reportsDetailsOfIgnoredTests() throws Exception {
-		UnitTestVisitor visitor = runDetector(OneIgnoredOneActive.class);
+    @Test public void
+    reportsDetailsOfIgnoredTests() throws Exception {
+        UnitTestVisitor visitor = runDetector(OneIgnoredOneActive.class);
 
-		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
-		assertThat(detailsOfIgnoredTests.size(), is(1));
-		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(35, "myIgnoredTest", "OneIgnoredOneActive.java")));
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+        assertThat(detailsOfIgnoredTests.size(), is(1));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(35, "myIgnoredTest", "OneIgnoredOneActive.java")));
 
-	}
+    }
 
-	@Test public void
-	reportsDetailsOfIgnoredTheoryTests() throws Exception {
-	    UnitTestVisitor visitor = runDetector(OneIgnoredTheoryTestCase.class);
+    @Test public void
+    reportsDetailsOfIgnoredTheoryTests() throws Exception {
+        UnitTestVisitor visitor = runDetector(OneIgnoredTheoryTestCase.class);
 
-	    List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
-	    assertThat(detailsOfIgnoredTests.size(), is(1));
-	    assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(18, "ignoredTheory", "OneIgnoredTheoryTestCase.java")));
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+        assertThat(detailsOfIgnoredTests.size(), is(1));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(18, "ignoredTheory", "OneIgnoredTheoryTestCase.java")));
 
-	}
+    }
 
-	@Test public void
-	reportsOnManyIgnoredTests() throws Exception {
-		UnitTestVisitor visitor = runDetector(ManyIgnoredOneActive.class);
-		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+    @Test public void
+    reportsOnManyIgnoredTests() throws Exception {
+        UnitTestVisitor visitor = runDetector(ManyIgnoredOneActive.class);
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 
-		assertThat(detailsOfIgnoredTests.size(), is(2));
-		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(36, "myIgnoredTest", "ManyIgnoredOneActive.java")));
-		assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(42, "mySecondIgnoredTest", "ManyIgnoredOneActive.java")));
-	}
+        assertThat(detailsOfIgnoredTests.size(), is(2));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(36, "myIgnoredTest", "ManyIgnoredOneActive.java")));
+        assertThat(detailsOfIgnoredTests, hasItem(new IgnoredTestDetails(42, "mySecondIgnoredTest", "ManyIgnoredOneActive.java")));
+    }
 
-	@Test public void
-	doesNotReportIgnoredTestWhenTheIgnoreAnnotationIsCommentedOut() {
-		UnitTestVisitor visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
-		List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
+    @Test public void
+    doesNotReportIgnoredTestWhenTheIgnoreAnnotationIsCommentedOut() {
+        UnitTestVisitor visitor = runDetector(OneCommentedOutIgnoreTestCase.class);
+        List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 
-		assertThat(detailsOfIgnoredTests.size(), is(0));
-	}
+        assertThat(detailsOfIgnoredTests.size(), is(0));
+    }
 
-	@Test public void
-	reportsOnTestsWithCustomAnnotationOnTest() throws Exception {
-	    JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = new JUnitTestVisitor(scanForIgnoreAndCustomAnnotation);
-	    UnitTestVisitor visitor = runDetector(OneTestWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
+    @Test public void
+    reportsOnTestsWithCustomAnnotationOnTest() throws Exception {
+        JUnitTestVisitor visitorWhichAlsoLooksForCustomAnnotations = new JUnitTestVisitor(scanForIgnoreAndCustomAnnotation);
+        UnitTestVisitor visitor = runDetector(OneTestWithCustomAnnotationToLookFor.class, visitorWhichAlsoLooksForCustomAnnotations);
         List<IgnoredTestDetails> detailsOfIgnoredTests = visitor.detailsOfIgnoredTests();
 
         assertThat(detailsOfIgnoredTests.size(), is(1));
@@ -131,19 +131,19 @@ public class JUnitClassVisitorTest {
 
 
     private UnitTestVisitor runDetector(Class<?> toVisit) {
-		return runDetector(toVisit, new JUnitTestVisitor(Arrays.asList("org.junit.Ignore")));
-	}
+        return runDetector(toVisit, new JUnitTestVisitor(Arrays.asList("org.junit.Ignore")));
+    }
 
 
     private UnitTestVisitor runDetector(Class<?> toVisit, JUnitTestVisitor visitor) {
         ClassReader cr;
-		try {
-			cr = new ClassReader(toVisit.getName());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		cr.accept(visitor, 0);
-		return visitor;
+        try {
+            cr = new ClassReader(toVisit.getName());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        cr.accept(visitor, 0);
+        return visitor;
     }
 
 }

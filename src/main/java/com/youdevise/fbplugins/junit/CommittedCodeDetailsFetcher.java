@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface CommittedCodeDetailsFetcher {
 
-	List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile);
+    List<LineOfCommittedCode> logHistoryOfFile(String httpLocationOfVersionControlledSourceFile);
 
 }

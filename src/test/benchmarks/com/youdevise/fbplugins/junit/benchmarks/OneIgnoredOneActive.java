@@ -30,14 +30,14 @@ import org.junit.Test;
 
 public class OneIgnoredOneActive {
 
-	@Ignore
-	@Test public void myIgnoredTest() throws Exception {
-		assertTrue(false);
-	}
-	
-	@Test public void
-	myActiveTest() throws Exception {
-		
-	}
-	
+    @Ignore
+    @Test public void myIgnoredTest() throws Exception {
+        assertTrue(false);
+    }
+    
+    @Test public void
+    myActiveTest() throws Exception {
+        
+    }
+    
 }

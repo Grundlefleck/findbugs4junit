@@ -35,46 +35,46 @@ import edu.umd.cs.findbugs.ba.ClassContext;
 
 public class JUnitTestIgnoredForTooLong implements Detector {
 
-	private static final int PRIORITY_TO_REPORT = Priorities.NORMAL_PRIORITY;
-	
-	private final BugReporter bugReporter;
-	private final AgeOfIgnoreFinder ageOfIgnoreFinder;
-	private final FullSourcePathFinder sourcePathFinder;
-	private final UnitTestVisitor unitTestVisitor;
+    private static final int PRIORITY_TO_REPORT = Priorities.NORMAL_PRIORITY;
+    
+    private final BugReporter bugReporter;
+    private final AgeOfIgnoreFinder ageOfIgnoreFinder;
+    private final FullSourcePathFinder sourcePathFinder;
+    private final UnitTestVisitor unitTestVisitor;
 
     private final Detector pluginToRegisterBugsWith;
 
-	public JUnitTestIgnoredForTooLong(Detector pluginToRegisterBugsWith, BugReporter bugReporter, AgeOfIgnoreFinder ageOfIgnoreFinder, FullSourcePathFinder sourcePathFinder, UnitTestVisitor visitor) {
-		this.pluginToRegisterBugsWith = pluginToRegisterBugsWith;
+    public JUnitTestIgnoredForTooLong(Detector pluginToRegisterBugsWith, BugReporter bugReporter, AgeOfIgnoreFinder ageOfIgnoreFinder, FullSourcePathFinder sourcePathFinder, UnitTestVisitor visitor) {
+        this.pluginToRegisterBugsWith = pluginToRegisterBugsWith;
         this.bugReporter = bugReporter;
-		this.ageOfIgnoreFinder = ageOfIgnoreFinder;
-		this.sourcePathFinder = sourcePathFinder;
-		this.unitTestVisitor = visitor;
-	}
+        this.ageOfIgnoreFinder = ageOfIgnoreFinder;
+        this.sourcePathFinder = sourcePathFinder;
+        this.unitTestVisitor = visitor;
+    }
 
-	public void visitClassContext(ClassContext classContext) {
-		
-		if(!unitTestVisitor.classContainsIgnoredTests()) { return; }
-		try {
-			String fullSourcePath = sourcePathFinder.fullSourcePath(classContext);
-			
-			for (TooOldIgnoreBug bug : ageOfIgnoreFinder.ignoredForTooLong(fullSourcePath, unitTestVisitor.detailsOfIgnoredTests())) {
-				doReportBug(classContext, bug);
-			}
-		} catch (IOException e) {
-			logError("Could not find source file location for " + classContext.getJavaClass().getFileName(), e);
-			return;
-		
-		}
-	}
-	
+    public void visitClassContext(ClassContext classContext) {
+        
+        if(!unitTestVisitor.classContainsIgnoredTests()) { return; }
+        try {
+            String fullSourcePath = sourcePathFinder.fullSourcePath(classContext);
+            
+            for (TooOldIgnoreBug bug : ageOfIgnoreFinder.ignoredForTooLong(fullSourcePath, unitTestVisitor.detailsOfIgnoredTests())) {
+                doReportBug(classContext, bug);
+            }
+        } catch (IOException e) {
+            logError("Could not find source file location for " + classContext.getJavaClass().getFileName(), e);
+            return;
+        
+        }
+    }
+    
     private void doReportBug(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
         Method testMethod = getMethodFrom(classContext, tooOldIgnore);
         BugInstance bug = new BugInstance(pluginToRegisterBugsWith, "JUNIT_IGNORED_TOO_LONG", PRIORITY_TO_REPORT)
                                             .addClassAndMethod(classContext.getJavaClass(), testMethod);
         bugReporter.reportBug(bug);
-	}
-	
+    }
+    
     private Method getMethodFrom(ClassContext classContext, TooOldIgnoreBug tooOldIgnore) {
         for (Method method : classContext.getMethodsInCallOrder()) {
             if(method.getName().equalsIgnoreCase(tooOldIgnore.methodName())) {
@@ -88,8 +88,8 @@ public class JUnitTestIgnoredForTooLong implements Detector {
         System.err.printf("[Findbugs4JUnit plugin:] Error in detecting old @Ignores in %s%n%s%n", message, e);
     }
 
-	public void report() { }
+    public void report() { }
 
     
-	
+    
 }

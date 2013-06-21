@@ -30,12 +30,12 @@ import org.junit.Test;
 
 public class OneIgnoredTestCase {
 
-	@Ignore
-	/**
-	 * This is a 'live' @Ignore, which will appear in the bytecode.
-	 */
-	@Test public void myIgnoredTest() throws Exception {
-		assertTrue(false);
-	}
-	
+    @Ignore
+    /**
+     * This is a 'live' @Ignore, which will appear in the bytecode.
+     */
+    @Test public void myIgnoredTest() throws Exception {
+        assertTrue(false);
+    }
+    
 }

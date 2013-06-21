@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface UnitTestVisitor {
 
-	boolean classContainsIgnoredTests();
+    boolean classContainsIgnoredTests();
 
-	List<IgnoredTestDetails> detailsOfIgnoredTests();
+    List<IgnoredTestDetails> detailsOfIgnoredTests();
 
 }

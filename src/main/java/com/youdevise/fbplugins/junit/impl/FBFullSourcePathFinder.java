@@ -12,18 +12,18 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 
 public class FBFullSourcePathFinder implements FullSourcePathFinder {
 
-	public String fullSourcePath(ClassContext classContext) throws IOException {
-		JavaClass javaClass = classContext.getJavaClass();
+    public String fullSourcePath(ClassContext classContext) throws IOException {
+        JavaClass javaClass = classContext.getJavaClass();
         String sourceFile = javaClass.getSourceFileName();
         String packageName = javaClass.getPackageName();
         
-		SourceFile findSourceFile = sourceFinderFrom(classContext).findSourceFile(packageName, sourceFile);
+        SourceFile findSourceFile = sourceFinderFrom(classContext).findSourceFile(packageName, sourceFile);
 
-		return findSourceFile.getFullFileName();
-	}
+        return findSourceFile.getFullFileName();
+    }
 
-	private SourceFinder sourceFinderFrom(ClassContext classContext) {
-		return classContext.getAnalysisContext().getSourceFinder();
-	}
+    private SourceFinder sourceFinderFrom(ClassContext classContext) {
+        return classContext.getAnalysisContext().getSourceFinder();
+    }
 
 }

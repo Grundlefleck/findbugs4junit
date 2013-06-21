@@ -30,22 +30,22 @@ import org.junit.Test;
 
 public class ManyIgnoredOneActive {
 
-	@Ignore
-	@Test public void
-	myIgnoredTest() {
-		assertTrue(true);
-	}
-	
-	@Ignore
-	@Test public void
-	mySecondIgnoredTest() {
-		assertTrue(true);
-	}
-	
-	
-	@Test public void
-	myActiveTest() {
-		
-	}
-	
+    @Ignore
+    @Test public void
+    myIgnoredTest() {
+        assertTrue(true);
+    }
+    
+    @Ignore
+    @Test public void
+    mySecondIgnoredTest() {
+        assertTrue(true);
+    }
+    
+    
+    @Test public void
+    myActiveTest() {
+        
+    }
+    
 }

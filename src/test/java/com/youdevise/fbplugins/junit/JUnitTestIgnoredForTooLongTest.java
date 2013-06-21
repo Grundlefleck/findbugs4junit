@@ -56,9 +56,9 @@ public class JUnitTestIgnoredForTooLongTest {
     private BugReporter bugReporter;
     private Detector detector;
     private AgeOfIgnoreFinder ageOfIgnoreFinder;
-	private FullSourcePathFinder sourcePathFinder;
-	private UnitTestVisitor unitTestVisitor;
-	private TooOldIgnoreBug ignoreBug = new TooOldIgnoreBug("SomeSourceFile.java", "myIgnoredTest", 27);
+    private FullSourcePathFinder sourcePathFinder;
+    private UnitTestVisitor unitTestVisitor;
+    private TooOldIgnoreBug ignoreBug = new TooOldIgnoreBug("SomeSourceFile.java", "myIgnoredTest", 27);
     private Detector detectorToRegisterBugsAs;
 
     @Before public void setUp() {
@@ -69,95 +69,95 @@ public class JUnitTestIgnoredForTooLongTest {
         detectorToRegisterBugsAs = mock(Detector.class);
     }
 
-	private void constructDetector() {
-		detector = new JUnitTestIgnoredForTooLong(detectorToRegisterBugsAs, bugReporter, ageOfIgnoreFinder, sourcePathFinder, unitTestVisitor);
-	}
-	
-	@Test public void
-	doesNotReportBugWhenClassHasNoIgnoredTestCases() throws Exception {
-		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(false);
-		constructDetector();
-		assertNoBugsReported(NoIgnoredTests.class, detector, bugReporter); 
-	}
-	
-	@Test public void
-	reportsABugForAJUnitTestWithIgnoreInItWhichIsTooOld() throws Exception {
-		String fileNameWithIgnore = "OneIgnoredTestCase.java";
-		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
-		when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(Arrays.asList(new IgnoredTestDetails(20, "myIgnoredTest", fileNameWithIgnore)));
-		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
-		
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class)))
-		            .thenReturn(oldIgnoreBugs(ignoreBug));
-		
-		constructDetector();
-		
-		assertBugReported(OneIgnoredTestCase.class, detector, bugReporter);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test public void
-	reportsABugForEachOldIgnoreInATestFile() throws Exception {
-		String fileNameWithIgnore = "OneIgnoredTestCase.java";
-		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
-		when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(asList(new IgnoredTestDetails(20, "myIgnoredTest", fileNameWithIgnore),
-																		new IgnoredTestDetails(55, "someOtherMethodName", fileNameWithIgnore)));
-		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class)))
-									.thenReturn(oldIgnoreBugs(ignoreBug, ignoreBug));
-		
-		constructDetector();
-		
-		assertAllBugsReported(ManyIgnoredOneActive.class, detector, bugReporter, 
-				              ofType("JUNIT_IGNORED_TOO_LONG"), ofType("JUNIT_IGNORED_TOO_LONG"));
-	}
+    private void constructDetector() {
+        detector = new JUnitTestIgnoredForTooLong(detectorToRegisterBugsAs, bugReporter, ageOfIgnoreFinder, sourcePathFinder, unitTestVisitor);
+    }
+    
+    @Test public void
+    doesNotReportBugWhenClassHasNoIgnoredTestCases() throws Exception {
+        when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(false);
+        constructDetector();
+        assertNoBugsReported(NoIgnoredTests.class, detector, bugReporter); 
+    }
+    
+    @Test public void
+    reportsABugForAJUnitTestWithIgnoreInItWhichIsTooOld() throws Exception {
+        String fileNameWithIgnore = "OneIgnoredTestCase.java";
+        when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
+        when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(Arrays.asList(new IgnoredTestDetails(20, "myIgnoredTest", fileNameWithIgnore)));
+        when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
+        
+        when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class)))
+                    .thenReturn(oldIgnoreBugs(ignoreBug));
+        
+        constructDetector();
+        
+        assertBugReported(OneIgnoredTestCase.class, detector, bugReporter);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test public void
+    reportsABugForEachOldIgnoreInATestFile() throws Exception {
+        String fileNameWithIgnore = "OneIgnoredTestCase.java";
+        when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
+        when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(asList(new IgnoredTestDetails(20, "myIgnoredTest", fileNameWithIgnore),
+                                                                        new IgnoredTestDetails(55, "someOtherMethodName", fileNameWithIgnore)));
+        when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
+        when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class)))
+                                    .thenReturn(oldIgnoreBugs(ignoreBug, ignoreBug));
+        
+        constructDetector();
+        
+        assertAllBugsReported(ManyIgnoredOneActive.class, detector, bugReporter, 
+                              ofType("JUNIT_IGNORED_TOO_LONG"), ofType("JUNIT_IGNORED_TOO_LONG"));
+    }
 
-	private List<TooOldIgnoreBug> oldIgnoreBugs(TooOldIgnoreBug... bugs) {
-		return Arrays.<TooOldIgnoreBug>asList(bugs);
-	}
-	
-	@Test public void
-	doesNotReportIgnoresWhichAreNotTooOld() throws Exception {
-		String fileNameWithIgnore = "OneIgnoredTestCase.java";
-		mockIgnoredTestInFile(fileNameWithIgnore, "myIgnoredTest");
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class))).thenReturn(oldIgnoreBugs());
-		
-		constructDetector();
-		
-		assertNoBugsReported(ManyIgnoredOneActive.class, detector, bugReporter);
-	}
-	
+    private List<TooOldIgnoreBug> oldIgnoreBugs(TooOldIgnoreBug... bugs) {
+        return Arrays.<TooOldIgnoreBug>asList(bugs);
+    }
+    
+    @Test public void
+    doesNotReportIgnoresWhichAreNotTooOld() throws Exception {
+        String fileNameWithIgnore = "OneIgnoredTestCase.java";
+        mockIgnoredTestInFile(fileNameWithIgnore, "myIgnoredTest");
+        when(ageOfIgnoreFinder.ignoredForTooLong(contains(fileNameWithIgnore), anyListOf(IgnoredTestDetails.class))).thenReturn(oldIgnoreBugs());
+        
+        constructDetector();
+        
+        assertNoBugsReported(ManyIgnoredOneActive.class, detector, bugReporter);
+    }
+    
 
-	@Test public void
-	onlyReportsBugsForIgnoresWhichAreTooOld() throws Exception {
-		mockIgnoredTestInFile("OneIgnoredTestCase.java", "myIgnoredTest");
-		mockIgnoredTestInFile("OneIgnoredTestCase.java", "mySecondIgnoredTest");
-		
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("myIgnoredTest")))).thenReturn(oldIgnoreBugs());
-		when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("mySecondIgnoredTest")))).thenReturn(oldIgnoreBugs(ignoreBug));
-		
-		constructDetector();
-		
-		assertBugReported(ManyIgnoredOneActive.class, detector, bugReporter);
-	}
-	
-	private ArgumentMatcher<List<IgnoredTestDetails>> isIgnoredTestMethod(final String methodName) {
-		return new ArgumentMatcher<List<IgnoredTestDetails>>() {
-			@SuppressWarnings("unchecked") @Override public boolean matches(Object argument) {
-				boolean foundMatch = false;
-				for(IgnoredTestDetails testDetails: ((List<IgnoredTestDetails>) argument)) {
-					String methodNameGiven = testDetails.methodName;
-					foundMatch |= methodName.equals(methodNameGiven);
-				}
-				return foundMatch;
-			}
-		};
-	}
+    @Test public void
+    onlyReportsBugsForIgnoresWhichAreTooOld() throws Exception {
+        mockIgnoredTestInFile("OneIgnoredTestCase.java", "myIgnoredTest");
+        mockIgnoredTestInFile("OneIgnoredTestCase.java", "mySecondIgnoredTest");
+        
+        when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("myIgnoredTest")))).thenReturn(oldIgnoreBugs());
+        when(ageOfIgnoreFinder.ignoredForTooLong(contains("OneIgnoredTestCase.java"), argThat(isIgnoredTestMethod("mySecondIgnoredTest")))).thenReturn(oldIgnoreBugs(ignoreBug));
+        
+        constructDetector();
+        
+        assertBugReported(ManyIgnoredOneActive.class, detector, bugReporter);
+    }
+    
+    private ArgumentMatcher<List<IgnoredTestDetails>> isIgnoredTestMethod(final String methodName) {
+        return new ArgumentMatcher<List<IgnoredTestDetails>>() {
+            @SuppressWarnings("unchecked") @Override public boolean matches(Object argument) {
+                boolean foundMatch = false;
+                for(IgnoredTestDetails testDetails: ((List<IgnoredTestDetails>) argument)) {
+                    String methodNameGiven = testDetails.methodName;
+                    foundMatch |= methodName.equals(methodNameGiven);
+                }
+                return foundMatch;
+            }
+        };
+    }
 
-	private void mockIgnoredTestInFile(String fileNameWithIgnore, String methodName) throws IOException {
-		when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
-		when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(asList(new IgnoredTestDetails(20, methodName, fileNameWithIgnore)));
-		when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
-	}
+    private void mockIgnoredTestInFile(String fileNameWithIgnore, String methodName) throws IOException {
+        when(unitTestVisitor.classContainsIgnoredTests()).thenReturn(true);
+        when(unitTestVisitor.detailsOfIgnoredTests()).thenReturn(asList(new IgnoredTestDetails(20, methodName, fileNameWithIgnore)));
+        when(sourcePathFinder.fullSourcePath(any(ClassContext.class))).thenReturn(fileNameWithIgnore);
+    }
 
 }
