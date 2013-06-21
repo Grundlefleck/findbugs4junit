@@ -9,7 +9,7 @@ public class VersionControlledSourceFileFinderTest {
     @Test public void
     usesFullFilePathAndVersionControlPropertiesToCreateAnHttpLocationOfSourceFile() throws Exception {
         PluginProperties properties = PluginProperties.fromArguments("http://somehost/some/vcs/dir/trunk", 
-                                                                     "/home/jemima/workspace/MyProject", "14");
+                                                                     "/home/jemima/workspace/MyProject", "14", "");
         String fullFilePath = "/home/jemima/workspace/MyProject/src/org/surrender/MyMainClass.java";
         
         String location = new VersionControlledSourceFileFinder(properties).location(fullFilePath);
@@ -20,7 +20,7 @@ public class VersionControlledSourceFileFinderTest {
     @Test public void
     willHandleExtraSlashes() throws Exception {
         PluginProperties properties = PluginProperties.fromArguments("http://somehost/some/vcs/dir/trunk/",
-                                                                     "/home/jemima/workspace/MyProject/", "14");
+                                                                     "/home/jemima/workspace/MyProject/", "14", "");
         String fullFilePath = "/home/jemima/workspace/MyProject/src/org/surrender/MyMainClass.java";
         
         String location = new VersionControlledSourceFileFinder(properties).location(fullFilePath);
