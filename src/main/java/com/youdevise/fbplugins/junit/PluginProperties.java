@@ -20,7 +20,7 @@ public class PluginProperties {
     public static final String TOO_OLD_THRESHOLD = property("tooOldThreshold");
     public static final String ANNOTATIONS_TO_LOOK_FOR = property("annotationsToLookFor");
     
-    public static final String VERSION_CONTROL_PROJECT_ROOT_ERROR = mandatory(VERSION_CONTROL_PROJECT_ROOT, ", and must begin with 'http://'", "http://srcserver/svn/trunk/MyProject");
+    public static final String VERSION_CONTROL_PROJECT_ROOT_ERROR = VERSION_CONTROL_PROJECT_ROOT + " must be empty (for git) or begin with 'http://' (for SVN)";
     public static final String PROJECT_BASE_DIR_NAME_ERROR = mandatory(PROJECT_BASE_DIR_NAME, "", "/home/me/workspace/MyProject");
     public static final String TOO_OLD_THRESHOLD_ERROR = mandatory(TOO_OLD_THRESHOLD, ", an integer for days old an @Ignore has to be", "14");
 
@@ -53,7 +53,7 @@ public class PluginProperties {
     public static PluginProperties fromArguments(String versionControlProjectRoot, String projectBaseDirName, String tooOldThreshold, String annotationsToLookFor) {
         List<String> errors = new ArrayList<String>();
         
-        if(isBlank(versionControlProjectRoot) || !(versionControlProjectRoot.startsWith("http://"))) {
+        if(!isBlank(versionControlProjectRoot) && !versionControlProjectRoot.startsWith("http://")) {
             errors.add(VERSION_CONTROL_PROJECT_ROOT_ERROR);
         } 
         
@@ -90,7 +90,7 @@ public class PluginProperties {
         }
     }
 
-    private static boolean isBlank(String property) {
+    public static boolean isBlank(String property) {
         return property == null || property.isEmpty();
     }
     

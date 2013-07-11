@@ -46,7 +46,7 @@ public class SvnCommittedCodeDetailsFetcher implements CommittedCodeDetailsFetch
         
         public void handleLine(Date date, long revision, String author, String line, Date mergedDate, long mergedRevision,
                 String mergedAuthor, String mergedPath, int lineNumber) throws SVNException {
-            lines.add(new LineOfCommittedCode(new DateTime(date), revision, author, line, lineNumber));
+            lines.add(new LineOfCommittedCode(new DateTime(date), String.valueOf(revision), author, line, lineNumber));
         }
 
         public List<LineOfCommittedCode> lines() { return Collections.unmodifiableList(lines); }

@@ -13,13 +13,13 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import com.youdevise.fbplugins.junit.impl.SvnAgeOfIgnoreChecker;
+import com.youdevise.fbplugins.junit.impl.VersionControlledAgeOfIgnoreChecker;
 
-public class SvnAgeOfIgnoreCheckerTest {
+public class VersionControlledAgeOfIgnoreCheckerTest {
 
     private VersionControlledSourceFileFinder vcsFileFinder;
     private CommittedCodeDetailsFetcher committedCodeDetailsFetcher;
-    private SvnAgeOfIgnoreChecker ageFinder;
+    private VersionControlledAgeOfIgnoreChecker ageFinder;
     private DateTime tooOldThresholdDate;
 
     private void mockSvnQueryToReturn(List<LineOfCommittedCode> linesOfCode) {
@@ -35,13 +35,13 @@ public class SvnAgeOfIgnoreCheckerTest {
     returnsATooOldIgnoreBugForTheMethodGivenInIgnoredTestDetails() {
 
         DateTime dateOfIgnore = new DateTime().minusDays(4);
-        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), 0, "", "first line in file", 0),
-                                                             new LineOfCommittedCode(dateOfIgnore, 0, "", "@Ignore", 1),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "public void myIgnoredTest() {", 2),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "    assertThat(...);", 3));
+        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), "0", "", "first line in file", 0),
+                                                       new LineOfCommittedCode(dateOfIgnore, "0", "", "@Ignore", 1),
+                                                       new LineOfCommittedCode(new DateTime(), "0", "", "public void myIgnoredTest() {", 2),
+                                                       new LineOfCommittedCode(new DateTime(), "0", "", "    assertThat(...);", 3));
         mockSvnQueryToReturn(linesOfCode);
 
-        ageFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
+        ageFinder = new VersionControlledAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
 
         List<IgnoredTestDetails> ignoredTests = asList(new IgnoredTestDetails(4, "myIgnoredTest", "JavaSource.java"));
         List<TooOldIgnoreBug> ignoredForTooLong = ageFinder.ignoredForTooLong("local file path", ignoredTests);
@@ -59,13 +59,13 @@ public class SvnAgeOfIgnoreCheckerTest {
         DateTime dateOfIgnore = new DateTime().minusDays(4);
 
 
-        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), 0, "", "first line in file", 0),
-                                                             new LineOfCommittedCode(dateOfIgnore, 0, "", "@MyCustomAnnotation", 1),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "public void customlyAnnotatedTest() {", 2),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "   assertThat(...);", 3));
+        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), "0", "", "first line in file", 0),
+                                                             new LineOfCommittedCode(dateOfIgnore, "0", "", "@MyCustomAnnotation", 1),
+                                                             new LineOfCommittedCode(new DateTime(), "0", "", "public void customlyAnnotatedTest() {", 2),
+                                                             new LineOfCommittedCode(new DateTime(), "0", "", "   assertThat(...);", 3));
         mockSvnQueryToReturn(linesOfCode);
 
-        ageFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, Arrays.asList("org.stuff.MyCustomAnnotation"));
+        ageFinder = new VersionControlledAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, Arrays.asList("org.stuff.MyCustomAnnotation"));
 
         List<IgnoredTestDetails> ignoredTests = asList(new IgnoredTestDetails(4, "customlyAnnotatedTest", "JavaSource.java"));
         List<TooOldIgnoreBug> ignoredForTooLong = ageFinder.ignoredForTooLong("local file path", ignoredTests);
@@ -78,13 +78,13 @@ public class SvnAgeOfIgnoreCheckerTest {
         DateTime dateOfIgnore = new DateTime().minusDays(4);
 
 
-        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), 0, "", "first line in file", 0),
-                new LineOfCommittedCode(dateOfIgnore, 0, "", "@org.stuff.MyOtherCustomAnnotation", 1),
-                new LineOfCommittedCode(new DateTime(), 0, "", "public void customlyAnnotatedTest() {", 2),
-                new LineOfCommittedCode(new DateTime(), 0, "", "   assertThat(...);", 3));
+        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), "0", "", "first line in file", 0),
+                new LineOfCommittedCode(dateOfIgnore, "0", "", "@org.stuff.MyOtherCustomAnnotation", 1),
+                new LineOfCommittedCode(new DateTime(), "0", "", "public void customlyAnnotatedTest() {", 2),
+                new LineOfCommittedCode(new DateTime(), "0", "", "   assertThat(...);", 3));
         mockSvnQueryToReturn(linesOfCode);
 
-        ageFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate,
+        ageFinder = new VersionControlledAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate,
                 Arrays.asList("org.stuff.MyCustomAnnotation", "org.stuff.MyOtherCustomAnnotation"));
 
         List<IgnoredTestDetails> ignoredTests = asList(new IgnoredTestDetails(4, "customlyAnnotatedTest", "JavaSource.java"));
@@ -96,13 +96,13 @@ public class SvnAgeOfIgnoreCheckerTest {
     @Test public void
     doesNotReturnATooOldIgnoreBugIfTheIgnoreWasCommittedAfterTheThreshold() {
         DateTime dateOfIgnore = new DateTime().minusDays(2);
-        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), 0, "", "first line in file", 0),
-                                                             new LineOfCommittedCode(dateOfIgnore, 0, "", "@Ignore", 1),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "public void myIgnoredTest() {", 2),
-                                                             new LineOfCommittedCode(new DateTime(), 0, "", "   assertThat(...);", 3));
+        List<LineOfCommittedCode> linesOfCode = asList(new LineOfCommittedCode(new DateTime(), "0", "", "first line in file", 0),
+                                                             new LineOfCommittedCode(dateOfIgnore, "0", "", "@Ignore", 1),
+                                                             new LineOfCommittedCode(new DateTime(), "0", "", "public void myIgnoredTest() {", 2),
+                                                             new LineOfCommittedCode(new DateTime(), "0", "", "   assertThat(...);", 3));
         mockSvnQueryToReturn(linesOfCode);
 
-        ageFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
+        ageFinder = new VersionControlledAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
 
         List<IgnoredTestDetails> ignoredTests = asList(new IgnoredTestDetails(4, "myIgnoredTest", "JavaSource.java"));
         List<TooOldIgnoreBug> ignoredForTooLong = ageFinder.ignoredForTooLong("local file path", ignoredTests);
@@ -115,7 +115,7 @@ public class SvnAgeOfIgnoreCheckerTest {
     returnsAnEmptyListWhenGivenNoLinesOfCode() throws Exception {
         mockSvnQueryToReturn(Collections.<LineOfCommittedCode>emptyList());
 
-        ageFinder = new SvnAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
+        ageFinder = new VersionControlledAgeOfIgnoreChecker(vcsFileFinder, committedCodeDetailsFetcher, tooOldThresholdDate, asList("org.junit.Ignore"));
 
         List<IgnoredTestDetails> ignoredTests = asList(new IgnoredTestDetails(4, "myIgnoredTest", "JavaSource.java"));
         List<TooOldIgnoreBug> ignoredForTooLong = ageFinder.ignoredForTooLong("local file path", ignoredTests);

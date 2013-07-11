@@ -1,16 +1,17 @@
 package com.youdevise.fbplugins.junit;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.junit.Test;
+
 import static com.youdevise.fbplugins.junit.PluginProperties.PROJECT_BASE_DIR_NAME_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.TOO_OLD_THRESHOLD_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.VERSION_CONTROL_PROJECT_ROOT_ERROR;
 import static com.youdevise.fbplugins.junit.PluginProperties.fromArguments;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.collection.IsCollectionContaining.hasItem;
-
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.junit.Test;
 
 public class PluginPropertiesTest {
 
@@ -35,7 +36,7 @@ public class PluginPropertiesTest {
         properties = fromArguments(null, null, null, ONLY_LOOK_FOR_IGNORE);
         Iterable<String> errors = properties.errors();
 
-        assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
+        assertThat(errors, not(hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR)));
         assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
         assertThat(errors, hasItem(TOO_OLD_THRESHOLD_ERROR));
         assertThat(properties.areValid(), is(false));
@@ -46,7 +47,7 @@ public class PluginPropertiesTest {
         properties = fromArguments("", "", "", ONLY_LOOK_FOR_IGNORE);
         Iterable<String> errors = properties.errors();
 
-        assertThat(errors, hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR));
+        assertThat(errors, not(hasItem(VERSION_CONTROL_PROJECT_ROOT_ERROR)));
         assertThat(errors, hasItem(PROJECT_BASE_DIR_NAME_ERROR));
         assertThat(errors, hasItem(TOO_OLD_THRESHOLD_ERROR));
         assertThat(properties.areValid(), is(false));

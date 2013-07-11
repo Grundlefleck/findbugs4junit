@@ -5,12 +5,12 @@ import org.joda.time.DateTime;
 public class LineOfCommittedCode {
 
     public final DateTime dateOfCommit;
-    public final long revision;
+    public final String revision;
     public final String author;
     public final String lineContents;
     public final int lineNumber;
 
-    public LineOfCommittedCode(DateTime dateOfIgnore, long revision, String author, String lineContents, int lineNumber) {
+    public LineOfCommittedCode(DateTime dateOfIgnore, String revision, String author, String lineContents, int lineNumber) {
         this.dateOfCommit = dateOfIgnore;
         this.revision = revision;
         this.author = author;

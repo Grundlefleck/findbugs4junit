@@ -18,11 +18,17 @@
             <scope>compile</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.tmatesoft.svnkit</groupId>
             <artifactId>svnkit</artifactId>
             <version>1.3.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>2.3.1.201302201838-r</version>
             <scope>compile</scope>
         </dependency>
 
@@ -129,6 +135,7 @@
                                <includes>
                                  <include>joda-time</include>
                                  <include>org.tmatesoft.svnkit</include>
+                                 <include>org.eclipse.jgit</include>
                                </includes>
                              </artifactSet>
 

@@ -9,14 +9,15 @@ public class VersionControlledSourceFileFinder {
     }
 
     public String location(String fullFilePath) {
-        String vcsRoot = stripTrailingSlash(properties.versionControlProjectRoot());
         String baseDirPath = properties.projectBaseDirName();
         int indexOfDirInProjectBaseDir = fullFilePath.lastIndexOf(baseDirPath) + properties.projectBaseDirName().length();
         String pathFromBaseDirOfLocalProject = stripLeadingSlash(fullFilePath.substring(indexOfDirInProjectBaseDir));
         
-        String fullVcsPath = vcsRoot + "/" + pathFromBaseDirOfLocalProject;
-        
-        return fullVcsPath;
+        if (PluginProperties.isBlank(properties.versionControlProjectRoot())) {
+            return pathFromBaseDirOfLocalProject;
+        }
+        String vcsRoot = stripTrailingSlash(properties.versionControlProjectRoot());
+        return vcsRoot + "/" + pathFromBaseDirOfLocalProject;
     }
 
     private String stripLeadingSlash(String path) {
