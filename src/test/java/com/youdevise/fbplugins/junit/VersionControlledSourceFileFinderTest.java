@@ -28,4 +28,12 @@ public class VersionControlledSourceFileFinderTest {
         assertThat(location, is("http://somehost/some/vcs/dir/trunk/src/org/surrender/MyMainClass.java"));
     }
     
+    @Test public void
+    usesRelativePathAsSourceFileLocationWhenNoVersionControlProjectRootIsGiven() throws Exception {
+        PluginProperties properties = PluginProperties.fromArguments(null, "/home/user/projects/bockbier", "7", "");
+        
+        String location = new VersionControlledSourceFileFinder(properties).location("/home/user/projects/bockbier/de/andechs/Dunkel.java");
+        
+        assertThat(location, is("de/andechs/Dunkel.java"));
+    }
 }
